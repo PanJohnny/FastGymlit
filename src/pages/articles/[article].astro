@@ -1,0 +1,23 @@
+---
+const {article} = Astro.params
+import Layout from "../../layouts/Layout.astro";
+import { getFeed } from "../api/feed";
+
+const articles = await getFeed()
+
+let art;
+articles.map(a => {
+    if(a.link.split("/")[3] == article) {
+        art = a;
+    }
+})
+
+if (!art)
+    return Astro.redirect("/404")
+---
+
+<Layout title={art.title}>
+    <main set:html={art["content:encoded"]}>
+        
+    </main>
+</Layout>

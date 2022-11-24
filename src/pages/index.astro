@@ -1,0 +1,30 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Article from "../components/Article.astro";
+import { getFeed } from "./api/feed";
+
+const articles = await getFeed()
+
+---
+
+<Layout title="Domov | FastGymlit">
+	<main>
+		<div class="articles">
+			{
+				articles.map((article:any) => (
+					<Article title={article.title} href={article.link} author={article["dc:creator"]} date={article.pubDate} body={article.description}></Article>
+				))
+			}
+		</div>
+	</main>
+</Layout>
+
+<style>
+	.articles {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		grid-template-rows: repeat(2, 1fr);
+		grid-column-gap: 2em;
+		grid-row-gap: 2em;
+	}
+</style>
