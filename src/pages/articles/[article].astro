@@ -1,23 +1,46 @@
 ---
-const {article} = Astro.params
+const { article } = Astro.params;
 import Layout from "../../layouts/Layout.astro";
 import { getFeed } from "../api/feed";
 
-const articles = await getFeed()
-
 let art;
-articles.map(a => {
-    if(a.link.split("/")[3] == article) {
-        art = a;
-    }
-})
+function loadArticles(articles) {
+    articles.map((a) => {
+        if (a.link.split("/")[3] == article) {
+            art = a;
+        }
+    });
+}
 
-if (!art)
-    return Astro.redirect("/404")
+loadArticles(await getFeed())
+if (!art) loadArticles(await getFeed(true))
+
+if (!art) return Response("Nenalezeno", {status: 404})
 ---
 
 <Layout title={art.title}>
-    <main set:html={art["content:encoded"]}>
-        
+    <main>
+        <div>
+            <input
+                type="button"
+                value="[BETA] Zjednodušit text"
+                title="Zformátujte text, tak aby byl čitelnější"
+                onclick="textSimplify()"
+            />
+        </div>
+        <div id="article-body" set:html={art["content:encoded"]} />
+        <a href={art.link} class="gymlitopen"></a>
     </main>
 </Layout>
+
+<script is:inline>
+    function textSimplify() {
+        const article = document.querySelector("#article-body");
+        for (let index = 0; index < article.children.length; index++) {
+            const element = article.children[index];
+            if (element.hasAttribute("style")) element.removeAttribute("style");
+            if (element.hasAttribute("class")) element.removeAttribute("class");
+            if (element.hasAttribute("align")) element.removeAttribute("align");
+        }
+    }
+</script>

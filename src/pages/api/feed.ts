@@ -2,7 +2,7 @@ import { XMLParser } from "fast-xml-parser";
 const parser = new XMLParser();
 
 export async function get({ params }) {
-  return new Response(JSON.stringify(getFeed()), {
+  return new Response(JSON.stringify(await getFeed(false)), {
     status: 200,
     headers: {
       "Content-Type": "application/json",

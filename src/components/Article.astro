@@ -1,27 +1,82 @@
 ---
 export interface Props {
 	title: string;
-	body: string;
+	description: string;
 	href: string;
 	author: string;
 	date: string;
+	body: string;
 }
 
-const { href, title, body, author, date } = Astro.props;
+const { href, title, description, body, author, date } = Astro.props;
 
 // translate href
 const translatedHref = "/articles/" + href.split("/")[3]
+
+const checkFor = [
+	"RNDr.",
+	"Mgr.",
+	"Ing.",
+	"Bc.",
+	"Doc."
+]
+
+let sureLevel:number = 0;
+let authorMaybe:string;
+for (let i = 0; i < checkFor.length; i++) {
+	let str = checkFor[i]
+	const lastIndexOf = body.lastIndexOf(str)
+	const substring = body.substring(lastIndexOf)
+	const before = body.charAt(lastIndexOf > 0?lastIndexOf-1:0)
+	if (lastIndexOf < 0)
+		continue;
+	if (lastIndexOf > body.length/2) {
+		sureLevel = 1;
+		if (before == ">") 
+			sureLevel = 2;
+		const end = substring.indexOf("</");
+		if (end < 0)
+			continue;
+		if (end > 8)
+			sureLevel = 3;
+		const name = substring.substring(0, end);
+		authorMaybe = name;
+		
+		break;
+	} else if (lastIndexOf > body.length/3) {
+		if (before == ">") 
+			sureLevel = 1;
+			const end = substring.indexOf("</");
+		if (end < 0)
+			continue;
+		if (end > 8)
+			sureLevel = 2;
+		const name = substring.substring(0, end);
+		authorMaybe = name;
+		break;
+	}
+}
+
+const shouldMaybeShowNewAuthor:boolean = authorMaybe != undefined;
+let job:string;
+let titleAuthor:string = "ředitelství";
+if (authorMaybe && authorMaybe.includes(", ")) {
+	job = authorMaybe.split(", ")[1];
+	authorMaybe = authorMaybe.split(", ")[0];
+}
+
+if (shouldMaybeShowNewAuthor)
+	titleAuthor = (job?job:"") + " (úroveň predikce učitele na základě obsahu: " + sureLevel + "/3)";
 ---
 
 <li class="article">
 	<div>
-		
 		<h2><a href={translatedHref} set:html={title}></a></h2>
 	</div>
 	<div class="article-info">
-		<span>{author}</span> <span>{new Date(date).toLocaleString("cs-CZ")}</span>
+		<span title={titleAuthor}>{shouldMaybeShowNewAuthor ? authorMaybe : author.replace("Administ", "Ředitelství")}</span> <span>{new Date(date).toLocaleString("cs-CZ")}</span>
 	</div>
-	<div class="article-content"> <span set:html={body.replace(/[\[&#8230;\]]/g, "")}></span> {body.includes("[&#8230;]") ? (<a href={translatedHref}>...</a>) : ""}</div>
+	<div class="article-content"> <span set:html={description.replace(/[\[&#8230;\]]/g, "")}></span> {description.includes("[&#8230;]") ? (<a href={translatedHref}>...</a>) : ""}</div>
 </li>
 
 <style>
@@ -33,6 +88,7 @@ const translatedHref = "/articles/" + href.split("/")[3]
 		border: var(--font-color) 1px solid;
 		padding: .4em;
 		margin: 2em;
+		margin-left: 0em;
 	}
 
 	.article > div > h2 {
@@ -65,5 +121,15 @@ const translatedHref = "/articles/" + href.split("/")[3]
 		width: 100%;
 		flex-direction: row;
 		font-weight: 600;
+	}
+
+	@media (max-width: 768px) {
+		.article-content {
+			display: none;
+		}
+
+		.article {
+			font-size: 80%;
+		}
 	}
 </style>

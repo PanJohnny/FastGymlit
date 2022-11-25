@@ -17,23 +17,55 @@ const { title } = Astro.props;
 	</head>
 	<body>
 		<header class="dark">
-			<h1>{title}</h1>
+			<h1 set:html={title} />
 			<nav>
-				<a href="/">Hlavní stránka</a>
-				<a href="/novinky">Novinky</a>
-				<a href="https://bakalari.gymlit.cz">Bakaláři</a>
-				<a href="https://www.strava.cz/strava5/Jidelnicky?zarizeni=0837&Tisk=true">Jídelníček</a>
-				<a href="https://www.youtube.com/@TVGymlitPrague">TV Gymlit</a>
-				<a href="https://skola.tritius.cz/library/gymlit">Knihovna</a>
+				<a href="/" id="nav-home" title="Hlavní stránka"
+					>Hlavní stránka</a
+				>
+				<a href="/novinky" id="nav-news" title="Novinky">Novinky</a>
+				<a
+					href="https://bakalari.gymlit.cz"
+					id="nav-baka"
+					title="Bakaláři">Bakaláři</a
+				>
+				<a
+					href="https://www.strava.cz/strava5/Jidelnicky?zarizeni=0837&Tisk=true"
+					id="nav-food"
+					title="Jídelníček">Jídelníček</a
+				>
+				<a
+					href="https://www.youtube.com/@TVGymlitPrague"
+					id="nav-tv"
+					title="TV Gymlit">TV Gymlit</a
+				>
+				<a
+					href="https://skola.tritius.cz/library/gymlit"
+					id="nav-lib"
+					title="Knihovna">Knihovna</a
+				>
 			</nav>
 		</header>
 		<slot />
+		<footer>
+			<div class="siteinfo">
+				Vytvořil <a href="https://github.com/PanJohnny/FastGymlit"
+					>Honza ♥</a
+				>
+			</div>
+		</footer>
 	</body>
 </html>
 <style is:global>
 	:root {
-		--default-font-size: 1em;
+		--default-font-size: 1.1rem;
 		--font-color: rgb(37, 37, 37);
+		--background-color: rgb(242, 242, 242);
+		--image-icon-filter: none;
+	}
+
+	a {
+		color: var(--font-color);
+		text-decoration-color: orange;
 	}
 
 	body {
@@ -42,8 +74,9 @@ const { title } = Astro.props;
 		height: 100%;
 		font-family: "Poppins", sans-serif;
 		font-size: var(--default-font-size);
-		background-color: rgb(242, 242, 242);
+		background-color: var(--background-color);
 		color: var(--font-color);
+		padding: 0px;
 	}
 
 	header {
@@ -51,18 +84,20 @@ const { title } = Astro.props;
 		margin-bottom: 2em;
 		width: 100%;
 		text-align: center;
+		left: 0px;
 	}
 
 	header > * {
 		padding-bottom: 0.2em;
 		border-bottom: 1px solid var(--font-color);
+		margin-right: 0px;
 	}
 
 	@media (prefers-color-scheme: dark) {
 		body {
-			background-color: rgb(37, 37, 37);
-			color: rgb(242, 242, 242);
 			--font-color: rgb(242, 242, 242);
+			--background-color: rgb(37, 37, 37);
+			--image-icon-filter: invert(1);
 		}
 	}
 
@@ -76,9 +111,112 @@ const { title } = Astro.props;
 	nav > a {
 		color: var(--font-color);
 		text-decoration: none;
+		font-size: 1.5em;
 	}
 
 	main {
-		margin: 2em;
+		margin: 1em;
+	}
+
+	.gymlitopen {
+		position: fixed;
+		left: 0.3em;
+		bottom: 0.3em;
+	}
+
+	.gymlitopen::after {
+		content: "Otevřít na www.gymlit.cz";
+		color: var(--font-color);
+		background-color: rgb(0, 195, 255);
+		padding: 0.2em;
+		text-decoration: none;
+		border-radius: 5px;
+		font-weight: bold;
+	}
+
+	.siteinfo {
+		position: fixed;
+		bottom: 0.3em;
+		right: 0em;
+		padding: 0.2em;
+		padding-right: 0.3em;
+		font-size: larger;
+		background-color: var(--background-color);
+		border: solid var(--font-color) 1px;
+		border-radius: 2px;
+	}
+
+	nav > a::before {
+		content: "";
+		font-size: initial;
+		display: inline-block;
+		width: var(--default-font-size);
+		height: var(--default-font-size);
+		background: no-repeat;
+		filter: var(--image-icon-filter);
+	}
+
+	@media (max-width: 900px) {
+		nav > a {
+			font-size: 0px;
+		}
+
+		nav > a::before {
+			width: 2em;
+			height: 2em;
+		}
+
+		body {
+			width: max-content;
+			height: max-content;
+		}
+	}
+
+	#nav-home::before {
+		background-image: url("/icons/house.svg");
+	}
+
+	#nav-news::before {
+		background-image: url("/icons/news.svg");
+	}
+
+	#nav-baka::before {
+		background-image: url("/icons/graduation_cap.svg");
+	}
+
+	#nav-food::before {
+		background-image: url("/icons/utensils.svg");
+	}
+
+	#nav-tv::before {
+		background-image: url("/icons/camera.svg");
+	}
+
+	#nav-lib::before {
+		background-image: url("/icons/book.svg");
+	}
+
+	@media (min-width: 1500px) {
+		header {
+			width: 100%;
+		}
+
+		body {
+			width: 100%;
+			margin-right: 0px;
+			font-size: 130%;
+			--default-font-size: 1.3rem;
+		}
+	}
+
+	@media (max-width: 400px) {
+		.gymlitopen::after {
+			content: "www.gymlit.cz";
+		}
+	}
+
+	img {
+		max-width: 80%;
+		height: auto;
 	}
 </style>

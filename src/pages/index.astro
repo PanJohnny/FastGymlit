@@ -3,16 +3,22 @@ import Layout from "../layouts/Layout.astro";
 import Article from "../components/Article.astro";
 import { getFeed } from "./api/feed";
 
-const articles = await getFeed()
-
+const articles = await getFeed();
 ---
 
 <Layout title="Domov | FastGymlit">
 	<main>
 		<div class="articles">
 			{
-				articles.map((article:any) => (
-					<Article title={article.title} href={article.link} author={article["dc:creator"]} date={article.pubDate} body={article.description}></Article>
+				articles.map((article: any) => (
+					<Article
+						title={article.title}
+						href={article.link}
+						author={article["dc:creator"]}
+						date={article.pubDate}
+						body={article["content:encoded"]}
+						description={article.description}
+					/>
 				))
 			}
 		</div>
