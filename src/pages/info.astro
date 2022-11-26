@@ -1,0 +1,141 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="Informace o stránce | FastGymlit">
+    <main>
+        <div id="obsah">
+            <h2>Obsah</h2>
+            <ul>
+                <li><a href="#motivace">Motivace</a></li>
+                <li><a href="#fungovani">Jak to vlastně funguje</a></li>
+                <li>
+                    <a href="#fungovani">Vychytávky</a>
+                    <ul>
+                        <li><a href="#jmenoucitele">Odhadnutí skutečného autora článku</a></li>
+                        <li><a href="#nervi">Neřvi</a></li>
+                        <li><a href="#zjednodus">[BETA] Zjednodušení textu</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div id="motivace">
+            <h2>Motivace</h2>
+            <p>
+                Tato stránka byla vytvořena, jako osobní projekt. Má za úkol
+                zrychlit a usnadnit používání webových stránek školy - a to
+                hlavně funkce získávání novinek.
+            </p>
+        </div>
+        <div id="fungovani">
+            <h2>Jak to vlastně funguje</h2>
+            <p>
+                Tato stránka z webové stránky školy získává data ve formě xml a ty potom
+                renderuje na stránku. Je to adresa <code
+                    >https://www.gymlit.cz/feed</code
+                > a pro novinky <code
+                    >https://www.gymlit.cz/category/novinky/feed/</code
+                >. Pro přístup k hlavní stránce ve formě json arraye můžete
+                použít <a href="/api/feed"><code>/api/feed</code></a>.
+            </p>
+            <p>Odpověd z našeho api endpointu vypadá následovně:</p>
+            <script
+                media="(prefered-color-scheme: dark)"
+                src="https://gist.github.com/PanJohnny/4a1b5fe83583602c953b204d8983e423.js"
+                is:inline
+            ></script>
+            <p>Stránka navíc používá server-side rendering s frameworkem <a href="https://astro.build">astro.js</a>. Což znamená, že veškerý obsah je už poslaný s první odpověí stránky. Navíc jsem drasticky snížil velikost stránky.</p>
+        </div>
+        <div id="vychytavky">
+            <h2>Vychytávky</h2>
+            <p>
+                Tato stránka umí spoustu věcí, které učitelé asi hold neumí,
+                nebo škola neudělá. Jako je například psaní skutečného autora do
+                políčka autorství a dále. Teď se podíváme na všechny vychytávky,
+                které jsem vytvořil.
+            </p>
+            <div id="jmenoucitele">
+                <h3>1) Odhadnutí skutečného autora článku</h3>
+                <p>
+                    Jak jste si mohli všimnout, většina článků na www.gymlit.cz
+                    uvádí, že jsou od paní ředitelky, nebo od <code
+                        >Administ</code
+                    >rátora. Ale když si článek otevřete, tak je kompletně někdo
+                    jiný pod ním podepsaný.
+                </p>
+                <img
+                    src="/info/authorship0.png"
+                    alt="Ukázka kontextu, na obrázku je jako autor u stránek uveden Administ, ale pod ním podepsaná paní profesorka Skolilová"
+                />
+                <div>
+                    <p>
+                        Z tohoto důvodu jsem přidal systém, který rozpozná podpis
+                        autora, podle toho jestli obsah článku obsahuje titul.
+                        Použít tituly se bohužel jevilo jako nejlehčí řešení.
+                    </p>
+                    <p>
+                        Při extrakci jména se určí, jak moc si je algoritmus jistý.
+                        Toto je číslo od 1-3, s tím že 3 znamená, že je naprosto
+                        jistý se vším. A skóre 1 potřeba na to, aby se vůbec ukázalo
+                        odhadované jméno
+                    </p>
+                    <p>
+                        Existují hodnotící kritéria - to jsou: jestli je toto jméno
+                        za polovinou (+1), nebo za třetinou (nejnižší laťka, jinak
+                        se nepokračuje dál a jméno se hold neodhaduje, nic
+                        nepřidává). Dále hodnotím, jestli je článek ve svém vlastním
+                        HTML elementu a v neposlední řadě, jestli je jméno delší než
+                        8 charakterů.
+                    </p>
+                    <p>
+                        Nakonec určím jestli má učitel uvedenou funkci a to ve tvaru <code
+                            >Ing. Ivan Ivan, profesionální ivan</code
+                        > to se potom extrahuje a společně s hodnotící jistotou je to
+                        uvedené při najetí myší na element (pokud není uvedeno, zobrazí
+                        se jen skóre/"ředitelství").
+                    </p>
+                    <img
+                        src="/info/authorship1.png"
+                        alt="Ukázka ukazující, že u paní RNDr. Rozumové je uvedená profese a skóre"
+                    />
+                </div>
+            </div>
+            <div id="nervi">
+                <h3>2) Neřvi</h3>
+                <p>Rozhodně to není časté, ale stává se to. Pedagog zapne caps lock a místo <code>Název článku</code> napíše <code>NÁZEV ČLÁNKU</code>. Proto jsem vyvinul algoritmus, který detekuje jestli jsou nadpis jenom velká písmena a podle toho je zmenší. Jenom Vás upozorňuji, že tento algoritmus nerespektuje pravidla českého pravopisu.</p>
+                <img src="/info/noshout.png" alt="Ukázka této funkce">
+            </div>
+            <div id="zjednodus">
+                <h3>3) [BETA] Zjednodušení textu</h3>
+                <i>Tato funkce je dostupná při zmáčknutí tlačítka a ještě není plně zpracovaná.</i>
+                <p>Smaže formátování od tvůrce článku a to z toho důvodu, že někteří autoři zarovnávají text na střed.</p>
+                <p>Před:</p>
+                <img src="/info/zjednodus0.png" alt="Text je zarovaný ošklivě na střed">
+                <p>Po:</p>
+                <img src="/info/zjednodus1.png" alt="Text je zarovaný doleva">
+            </div>
+        </div>
+    </main>
+</Layout>
+
+<style is:inline>
+    /* https://github.com/lonekorean/gist-syntax-themes */
+    @import url("https://cdn.rawgit.com/lonekorean/gist-syntax-themes/d49b91b3/stylesheets/one-dark.css");
+
+    @media (max-width: 900px) {
+        .gist > * {
+            display: none;
+        }
+
+        .gist::before {
+            content: "Obsah nemohl být načtený kvůli velikosti obrazovky. Pokud ho chcete načíst otevřete tuto stránku s větší obrazovkou.";
+            color: gray;
+            font-family: monospace;
+        }
+    }
+
+    img {
+        border: 1px solid var(--font-color);
+        border-radius: 5px;
+    }
+</style>

@@ -33,4 +33,15 @@ const articles = await getFeed();
 		grid-column-gap: 2em;
 		grid-row-gap: 2em;
 	}
+
+	@media (max-width: 768px) {
+		.articles {
+			grid-template-columns: repeat(1, 1fr);
+			width: 100%;
+		}
+
+		body {
+			display: inline;
+		}
+	}
 </style>

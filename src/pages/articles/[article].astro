@@ -16,9 +16,16 @@ loadArticles(await getFeed())
 if (!art) loadArticles(await getFeed(true))
 
 if (!art) return Response("Nenalezeno", {status: 404})
+
+let noShout = false
+let noShoutTitle:string;
+if (art.title.toUpperCase() == art.title) {
+	noShout = true
+	noShoutTitle = art.title.charAt(0).toUpperCase() + art.title.substring(1).toLocaleLowerCase()
+}
 ---
 
-<Layout title={art.title}>
+<Layout title={noShout?noShoutTitle:art.title} noShout={noShout}>
     <main>
         <div>
             <input
@@ -29,8 +36,9 @@ if (!art) return Response("Nenalezeno", {status: 404})
             />
         </div>
         <div id="article-body" set:html={art["content:encoded"]} />
-        <a href={art.link} class="gymlitopen"></a>
     </main>
+
+    <footer><a href={art.link} class="gymlitopen"></a></footer>
 </Layout>
 
 <script is:inline>

@@ -33,24 +33,25 @@ for (let i = 0; i < checkFor.length; i++) {
 	if (lastIndexOf > body.length/2) {
 		sureLevel = 1;
 		if (before == ">") 
-			sureLevel = 2;
+			sureLevel++;
 		const end = substring.indexOf("</");
 		if (end < 0)
 			continue;
 		if (end > 8)
-			sureLevel = 3;
+			sureLevel++;
 		const name = substring.substring(0, end);
 		authorMaybe = name;
 		
 		break;
 	} else if (lastIndexOf > body.length/3) {
+		sureLevel = 0;
 		if (before == ">") 
-			sureLevel = 1;
+			sureLevel++;
 			const end = substring.indexOf("</");
 		if (end < 0)
 			continue;
 		if (end > 8)
-			sureLevel = 2;
+			sureLevel++;
 		const name = substring.substring(0, end);
 		authorMaybe = name;
 		break;
@@ -66,12 +67,19 @@ if (authorMaybe && authorMaybe.includes(", ")) {
 }
 
 if (shouldMaybeShowNewAuthor)
-	titleAuthor = (job?job:"") + " (úroveň predikce učitele na základě obsahu: " + sureLevel + "/3)";
+	titleAuthor = (job?job:"") + " (úroveň predikce učitele na základě obsahu: " + sureLevel + " ze 3)";
+
+let noShout = false
+let noShoutTitle:string;
+if (title.toUpperCase() == title) {
+	noShout = true
+	noShoutTitle = title.charAt(0).toUpperCase() + title.substring(1).toLocaleLowerCase()
+}
 ---
 
 <li class="article">
 	<div>
-		<h2><a href={translatedHref} set:html={title}></a></h2>
+		<h2><a href={translatedHref} title={noShout?"Titulek předělaný, aby učitel nepoužíval jen capslock (může obsahovat chyby)":"Titulek článku"} set:html={noShout ? noShoutTitle : title}></a></h2>
 	</div>
 	<div class="article-info">
 		<span title={titleAuthor}>{shouldMaybeShowNewAuthor ? authorMaybe : author.replace("Administ", "Ředitelství")}</span> <span>{new Date(date).toLocaleString("cs-CZ")}</span>
@@ -87,8 +95,7 @@ if (shouldMaybeShowNewAuthor)
 		border-radius: 10px;
 		border: var(--font-color) 1px solid;
 		padding: .4em;
-		margin: 2em;
-		margin-left: 0em;
+		margin: 0px;
 	}
 
 	.article > div > h2 {
@@ -124,12 +131,9 @@ if (shouldMaybeShowNewAuthor)
 	}
 
 	@media (max-width: 768px) {
-		.article-content {
-			display: none;
-		}
-
 		.article {
 			font-size: 80%;
+			width: 90vw;
 		}
 	}
 </style>
