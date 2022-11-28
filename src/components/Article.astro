@@ -6,12 +6,13 @@ export interface Props {
 	author: string;
 	date: string;
 	body: string;
+	searchParams: string;
 }
 
-const { href, title, description, body, author, date } = Astro.props;
+const { href, title, description, body, author, date, searchParams} = Astro.props;
 
 // translate href
-const translatedHref = "/articles/" + href.split("/")[3]
+const translatedHref = "/articles/" + href.split("/")[3] + searchParams
 
 const checkFor = [
 	"RNDr.",

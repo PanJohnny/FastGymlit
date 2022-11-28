@@ -1,0 +1,67 @@
+---
+import { Category, getFeed } from "../pages/api/feed";
+import Article from "./Article.astro";
+
+interface Props {
+    category:Category,
+    page:number,
+}
+
+const {category, page} = Astro.props as Props;
+
+const pageNormal:number = page?page:1;
+const back = pageNormal - 1;
+const next = pageNormal + 1;
+
+const articles = await getFeed(category, pageNormal);
+
+
+const searchParams = "?category=" + category + "&page=" + pageNormal;
+---
+
+<div class="articles">
+    {
+        articles.map((article: any) => (
+            <Article
+                title={article.title}
+                href={article.link}
+                author={article["dc:creator"]}
+                date={article.pubDate}
+                body={article["content:encoded"]}
+                description={article.description}
+                searchParams={searchParams}
+            />
+        ))
+    }
+</div>
+<div class="page-control">
+    {back > 0?(<a href={"?page=" + back}>←</a>):""} <span class="page-control-index">{pageNormal}</span> <a href={"?page=" + next}>→</a>
+</div>
+
+<style>
+    .articles {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		grid-template-rows: repeat(2, 1fr);
+		grid-column-gap: 2em;
+		grid-row-gap: 2em;
+	}
+
+	@media (max-width: 768px) {
+		.articles {
+			grid-template-columns: repeat(1, 1fr);
+			width: 100%;
+		}
+    }
+
+    .page-control {
+        text-align: center;
+        margin: 1em;
+        font-size: 1.3em;
+        color: orange;
+    }
+
+    .page-control > a {
+        text-decoration: none;
+    }
+</style>

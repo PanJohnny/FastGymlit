@@ -1,47 +1,25 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import Article from "../components/Article.astro";
-import { getFeed } from "./api/feed";
-
-const articles = await getFeed();
+import { Category } from "./api/feed";
+import Articles from "../components/Articles.astro";
 ---
 
 <Layout title="Domov | FastGymlit">
 	<main>
-		<div class="articles">
-			{
-				articles.map((article: any) => (
-					<Article
-						title={article.title}
-						href={article.link}
-						author={article["dc:creator"]}
-						date={article.pubDate}
-						body={article["content:encoded"]}
-						description={article.description}
-					/>
-				))
-			}
-		</div>
+		<div class="load"></div>
+		<Articles category={Category.Zadna} page={parseInt(Astro.url.searchParams.get("page"))} />
 	</main>
 </Layout>
 
 <style>
-	.articles {
-		display: grid;
-		grid-template-columns: repeat(2, 1fr);
-		grid-template-rows: repeat(2, 1fr);
-		grid-column-gap: 2em;
-		grid-row-gap: 2em;
-	}
 
 	@media (max-width: 768px) {
-		.articles {
-			grid-template-columns: repeat(1, 1fr);
-			width: 100%;
-		}
-
 		body {
 			display: inline;
 		}
+	}
+
+	.load::before {
+		content: "Načítání...";
 	}
 </style>

@@ -1,7 +1,9 @@
 ---
 const { article } = Astro.params;
 import Layout from "../../layouts/Layout.astro";
-import { getFeed } from "../api/feed";
+import { Category, getFeed } from "../api/feed";
+const page = Astro.url.searchParams.get("page")
+const category = Object.keys(Category)[Object.values(Category).indexOf(Astro.url.searchParams.get("category") as unknown as Category)] as Category
 
 let art;
 function loadArticles(articles) {
@@ -12,10 +14,24 @@ function loadArticles(articles) {
     });
 }
 
-loadArticles(await getFeed())
-if (!art) loadArticles(await getFeed(true))
-
-if (!art) return Response("Nenalezeno", {status: 404})
+if (!page) {
+    for (let index = 1; index < 3; index++) {
+        loadArticles(await getFeed(Category.Zadna, index))    
+        if (art)
+            break;
+    }
+    if (!art) return new Response("Nenalezeno na posledních 3 stránkách. Pokud si chcete tento archivní článek vychutnat u nás, odkaz musí mít parametr page=číslo a category=kategorie pro specifikaci stránky. Pokud Vám ho někdo poslal tak mu napište ať ho pošle celý, jaký ho má ve vyhledávači. Jinak toto můžete zkusit otevřít na gymlitu. <a href='https://www.gymlit.cz/"+article+"'>https://www.gymlit.cz/" + article + "</a>", {status: 400, headers: {"Content-Type": "text/html;charset=utf-8"}})
+} else {
+    const pInt = parseInt(page)
+    
+    if (!pInt) {
+        return new Response("Špatný request, page není číslo", 400)
+    }
+    loadArticles(await getFeed(category, pInt));
+    if (!art) {
+        return new Response("Nenalezeno na stránce č. "+pInt, 404)
+    }
+}
 
 let noShout = false
 let noShoutTitle:string;
@@ -27,6 +43,7 @@ if (art.title.toUpperCase() == art.title) {
 
 <Layout title={noShout?noShoutTitle:art.title} noShout={noShout}>
     <main>
+        <div>Kategorie: <a href={"/"+art.category.toLowerCase().replace(/ /g, "-").normalize("NFD").replace(/[\u0300-\u036f]/g, "")}>{art.category}</a></div>
         <div>
             <input
                 type="button"

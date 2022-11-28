@@ -25,6 +25,11 @@ const { title, noShout} = Astro.props;
 				>
 				<a href="/novinky" id="nav-news" title="Novinky">Novinky</a>
 				<a
+					href="/uspechy-skoly"
+					id="nav-accomplishments"
+					title="Úspěchy školy">Úspěchy</a
+				>
+				<a
 					href="https://bakalari.gymlit.cz"
 					id="nav-baka"
 					title="Bakaláři">Bakaláři</a
@@ -33,11 +38,6 @@ const { title, noShout} = Astro.props;
 					href="https://www.strava.cz/strava5/Jidelnicky?zarizeni=0837&Tisk=true"
 					id="nav-food"
 					title="Jídelníček">Jídelníček</a
-				>
-				<a
-					href="https://www.youtube.com/@TVGymlitPrague"
-					id="nav-tv"
-					title="TV Gymlit">TV</a
 				>
 				<a
 					href="https://skola.tritius.cz/library/gymlit"
@@ -194,8 +194,8 @@ const { title, noShout} = Astro.props;
 		background-image: url("/icons/utensils.svg");
 	}
 
-	#nav-tv::before {
-		background-image: url("/icons/camera.svg");
+	#nav-accomplishments::before {
+		background-image: url("/icons/trophy.svg");
 	}
 
 	#nav-lib::before {
@@ -228,5 +228,9 @@ const { title, noShout} = Astro.props;
 	img {
 		max-width: 80vw;
 		height: auto;
+	}
+
+	footer {
+		margin-bottom: 5em;
 	}
 </style>
