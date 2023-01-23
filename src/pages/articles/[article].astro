@@ -2,8 +2,12 @@
 const { article } = Astro.params;
 import Layout from "../../layouts/Layout.astro";
 import { Category, getFeed } from "../api/feed";
-const page = Astro.url.searchParams.get("page")
-const category = Object.keys(Category)[Object.values(Category).indexOf(Astro.url.searchParams.get("category") as unknown as Category)] as Category
+const page = Astro.url.searchParams.get("page");
+const category = Object.keys(Category)[
+    Object.values(Category).indexOf(
+        Astro.url.searchParams.get("category") as unknown as Category
+    )
+] as Category;
 
 let art;
 function loadArticles(articles) {
@@ -16,46 +20,69 @@ function loadArticles(articles) {
 
 if (!page) {
     for (let index = 1; index < 3; index++) {
-        loadArticles(await getFeed(Category.Zadna, index))    
-        if (art)
-            break;
+        loadArticles(await getFeed(Category.Zadna, index));
+        if (art) break;
     }
-    if (!art) return new Response("Nenalezeno na posledních 3 stránkách. Pokud si chcete tento archivní článek vychutnat u nás, odkaz musí mít parametr page=číslo a category=kategorie pro specifikaci stránky. Pokud Vám ho někdo poslal tak mu napište ať ho pošle celý, jaký ho má ve vyhledávači. Jinak toto můžete zkusit otevřít na gymlitu. <a href='https://www.gymlit.cz/"+article+"'>https://www.gymlit.cz/" + article + "</a>", {status: 400, headers: {"Content-Type": "text/html;charset=utf-8"}})
+    if (!art)
+        return new Response(
+            "Nenalezeno na posledních 3 stránkách. Pokud si chcete tento archivní článek vychutnat u nás, odkaz musí mít parametr page=číslo a category=kategorie pro specifikaci stránky. Pokud Vám ho někdo poslal tak mu napište ať ho pošle celý, jaký ho má ve vyhledávači. Jinak toto můžete zkusit otevřít na gymlitu. <a href='https://www.gymlit.cz/" +
+                article +
+                "'>https://www.gymlit.cz/" +
+                article +
+                "</a>",
+            {
+                status: 400,
+                headers: { "Content-Type": "text/html;charset=utf-8" },
+            }
+        );
 } else {
-    const pInt = parseInt(page)
-    
+    const pInt = parseInt(page);
+
     if (!pInt) {
-        return new Response("Špatný request, page není číslo", 400)
+        return new Response("Špatný request, page není číslo", 400);
     }
     loadArticles(await getFeed(category, pInt));
     if (!art) {
-        return new Response("Nenalezeno na stránce č. "+pInt, 404)
+        return new Response("Nenalezeno na stránce č. " + pInt, 404);
     }
 }
 
-let noShout = false
-let noShoutTitle:string;
+let noShout = false;
+let noShoutTitle: string;
 if (art.title.toUpperCase() == art.title) {
-	noShout = true
-	noShoutTitle = art.title.charAt(0).toUpperCase() + art.title.substring(1).toLocaleLowerCase()
+    noShout = true;
+    noShoutTitle =
+        art.title.charAt(0).toUpperCase() +
+        art.title.substring(1).toLocaleLowerCase();
 }
 ---
 
-<Layout title={noShout?noShoutTitle:art.title} noShout={noShout}>
-    <main>
-        <div>Kategorie: <a href={"/"+art.category.toLowerCase().replace(/ /g, "-").normalize("NFD").replace(/[\u0300-\u036f]/g, "")}>{art.category}</a></div>
-        <div>
-            <input
-                type="button"
-                value="[BETA] Zjednodušit text"
-                title="Zformátujte text, tak aby byl čitelnější"
-                onclick="textSimplify()"
-            />
-        </div>
+<Layout title={noShout ? noShoutTitle : art.title} noShout={noShout}>
+    <main class="container">
+        <h3
+            >Kategorie: <a
+                href={"/" +
+                    art.category
+                        .toLowerCase()
+                        .replace(/ /g, "-")
+                        .normalize("NFD")
+                        .replace(/[\u0300-\u036f]/g, "")}>{art.category}</a
+            >
+    </h3>
         <div id="article-body" set:html={art["content:encoded"]} />
     </main>
 
-    <footer><a href={art.link} class="gymlitopen"></a></footer>
+    <footer>
+        <div class="left-foot">
+            <a href={art.link} role="button">Otevřít originál</a>
+            <a
+                type="button"
+                title="Zformátujte text, tak aby byl čitelnější"
+                href="javascript:textSimplify()"
+                role="button"
+                class="secondary">Vymazat formátování</a>
+        </div>
+    </footer>
 </Layout>
 
 <script is:inline>

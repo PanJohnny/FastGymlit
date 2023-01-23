@@ -3,7 +3,7 @@ import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout title="Informace o stránce | FastGymlit">
-    <main>
+    <main class="container">
         <div id="obsah">
             <h2>Obsah</h2>
             <ul>
@@ -13,7 +13,7 @@ import Layout from "../layouts/Layout.astro";
                     <a href="#fungovani">Vychytávky</a>
                     <ul>
                         <li><a href="#jmenoucitele">Odhadnutí skutečného autora článku</a></li>
-                        <li><a href="#nervi">Neřvi</a></li>
+                        <li><a href="#nervi">CAPS LOCK NENÍ MOC COOL</a></li>
                         <li><a href="#zjednodus">[BETA] Zjednodušení textu</a></li>
                     </ul>
                 </li>
@@ -24,20 +24,16 @@ import Layout from "../layouts/Layout.astro";
             <p>
                 Tato stránka byla vytvořena, jako osobní projekt. Má za úkol
                 zrychlit a usnadnit používání webových stránek školy - a to
-                hlavně funkce získávání novinek.
+                hlavně funkce získávání novinek. Kód je k nalezení na <a href="https://github.com/PanJohnny/FastGymlit">https://github.com/PanJohnny/FastGymlit</a>.
             </p>
         </div>
         <div id="fungovani">
             <h2>Jak to vlastně funguje</h2>
             <p>
-                Tato stránka z webové stránky školy získává data ve formě xml a ty potom
-                renderuje na stránku. Je to adresa <code
-                    >https://www.gymlit.cz/feed</code
-                > a pro novinky <code
-                    >https://www.gymlit.cz/category/novinky/feed/</code
-                >. Pro přístup k hlavní stránce ve formě json arraye můžete
-                použít <a href="/api/feed"><code>/api/feed</code></a>.
+                Tahle stránka používá rss kanály školy k zobrazování dat. Vpodstatě je tohle taková čtečka. Na těchto stránlkách je dostupný endpoint <a href="/api/feed"><code>/api/feed</code></a>, který vrací hlavní stránku rss. Rss kanály školy jsou umístěny jako <code>/[kategorie]/feed</code> u hlavní stránky je to jen <code>/feed</code>.
             </p>
+            <p><ins><code>/api/feed</code> nějak na vercelu nefunguje. Prosím použijte tedy rss kanály školy pokud možno.</ins></p>
+            
             <p>Odpověd z našeho api endpointu vypadá následovně:</p>
             <script
                 media="(prefered-color-scheme: dark)"
@@ -101,22 +97,25 @@ import Layout from "../layouts/Layout.astro";
                 </div>
             </div>
             <div id="nervi">
-                <h3>2) Neřvi</h3>
-                <p>Rozhodně to není časté, ale stává se to. Pedagog zapne caps lock a místo <code>Název článku</code> napíše <code>NÁZEV ČLÁNKU</code>. Proto jsem vyvinul algoritmus, který detekuje jestli jsou nadpis jenom velká písmena a podle toho je zmenší. Jenom Vás upozorňuji, že tento algoritmus nerespektuje pravidla českého pravopisu.</p>
+                <h3>2) CAPS LOCK NENÍ MOC COOL</h3>
+                <p>Rozhodně to není časté, ale stát se to občas může. Pedagog zapne caps lock a místo <code>Název článku</code> napíše <code>NÁZEV ČLÁNKU</code>. Proto jsem vyvinul algoritmus, který detekuje jestli jsou nadpis jenom velká písmena a podle toho je zmenší. Jenom Vás upozorňuji, že tento algoritmus nerespektuje pravidla českého pravopisu.</p>
                 <img src="/info/noshout.png" alt="Ukázka této funkce">
             </div>
             <div id="zjednodus">
                 <h3>3) [BETA] Zjednodušení textu</h3>
                 <i>Tato funkce je dostupná při zmáčknutí tlačítka a ještě není plně zpracovaná.</i>
                 <p>Smaže formátování od tvůrce článku a to z toho důvodu, že někteří autoři zarovnávají text na střed.</p>
-                <p>Před:</p>
+                <h4>Před:</h4>
                 <img src="/info/zjednodus0.png" alt="Text je zarovaný ošklivě na střed">
-                <p>Po:</p>
+                <h4>Po:</h4>
                 <img src="/info/zjednodus1.png" alt="Text je zarovaný doleva">
             </div>
         </div>
-        <div>To není zdaleka vše. Tato stránka je open-source a to na <a href="https://github.com/PanJohnny/FastGymlit">https://github.com/PanJohnny/FastGymlit</a></div>
     </main>
+
+    <footer>
+        <div class="left-foot"><a href="/experiments" role="button" class="secondary">Experimenty</a></div>
+    </footer>
 </Layout>
 
 <style is:inline>
@@ -138,5 +137,11 @@ import Layout from "../layouts/Layout.astro";
     img {
         border: 1px solid var(--font-color);
         border-radius: 5px;
+        margin-top: .3em;
+        margin-bottom: .3em;
+    }
+
+    li > ul > li {
+        list-style: decimal;
     }
 </style>

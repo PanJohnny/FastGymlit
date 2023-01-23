@@ -19,7 +19,7 @@ const articles = await getFeed(category, pageNormal);
 const searchParams = "?category=" + category + "&page=" + pageNormal;
 ---
 
-<div class="articles">
+<div class="container">
     {
         articles.map((article: any) => (
             <Article
@@ -39,21 +39,6 @@ const searchParams = "?category=" + category + "&page=" + pageNormal;
 </div>
 
 <style>
-    .articles {
-		display: grid;
-		grid-template-columns: repeat(2, 1fr);
-		grid-template-rows: repeat(2, 1fr);
-		grid-column-gap: 2em;
-		grid-row-gap: 2em;
-	}
-
-	@media (max-width: 768px) {
-		.articles {
-			grid-template-columns: repeat(1, 1fr);
-			width: 100%;
-		}
-    }
-
     .page-control {
         text-align: center;
         margin: 1em;

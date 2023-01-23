@@ -1,0 +1,73 @@
+---
+import { JSDOM } from "jsdom";
+import Layout from "../../layouts/Layout.astro";
+
+interface Food {
+    rows: Row[];
+    day: string;
+}
+
+interface Row {
+    title: string;
+    name: string;
+}
+
+const dom = await JSDOM.fromURL(
+    "https://www.strava.cz/strava5/Jidelnicky?zarizeni=0837&Tisk=true"
+);
+
+const doc = dom.window.document;
+
+const objednavky = doc.querySelectorAll(
+    "#jidelnicky-obsah > div.jidelnicky.jidelnicky-sekce > div:nth-child(2) > .objednavka"
+);
+const foods: Food[] = [];
+
+objednavky.forEach((o) => {
+    const den = o.querySelector(".den").textContent;
+    const rows: Row[] = [];
+    o.querySelectorAll(".jidla > .jidlo > .dialog").forEach((row) => {
+        rows.push({
+            title: row.querySelector(".popis").textContent,
+            name: row.querySelector(".nazev").textContent,
+        });
+    });
+
+    foods.push({
+        day: den,
+        rows: rows,
+    });
+});
+---
+
+<Layout title="Jídelníček">
+    <main class="container">
+        {
+            foods.map((food) => (
+                <article>
+                    <h3>{food.day}</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Název</th>
+                            </tr>
+                        </thead>
+                        {food.rows.map((row) => (
+                            <tr>
+                                <td>
+                                    {row.title.charAt(0).toUpperCase() +
+                                        row.title.substring(1)}
+                                </td>
+                                <td>
+                                    {row.name.charAt(0).toUpperCase() +
+                                        row.name.substring(1)}
+                                </td>
+                            </tr>
+                        ))}
+                    </table>
+                </article>
+            ))
+        }
+    </main>
+</Layout>

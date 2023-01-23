@@ -2,8 +2,6 @@ import { XMLParser } from "fast-xml-parser";
 const parser = new XMLParser();
 
 export async function get({ params }) {
-  console.log(params);
-
   return new Response(JSON.stringify(await getFeed()), {
     status: 200,
     headers: {

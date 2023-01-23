@@ -78,49 +78,19 @@ if (title.toUpperCase() == title) {
 }
 ---
 
-<li class="article">
+<article>
 	<div>
 		<h2><a href={translatedHref} title={noShout?"Titulek předělaný, aby učitel nepoužíval jen capslock (může obsahovat chyby)":"Titulek článku"} set:html={noShout ? noShoutTitle : title}></a></h2>
 	</div>
 	<div class="article-info">
 		<span title={titleAuthor}>{shouldMaybeShowNewAuthor ? authorMaybe : author.replace("Administ", "Ředitelství")}</span> <span>{new Date(date).toLocaleString("cs-CZ")}</span>
 	</div>
-	<div class="article-content"> <span set:html={description.replace(/[\[&#8230;\]]/g, "")}></span> {description.includes("[&#8230;]") ? (<a href={translatedHref}>...</a>) : ""}</div>
-</li>
+	<div class="article-content"><span set:html={description.replace(/[\[&#8230;\]]/g, "")}></span>{description.includes("[&#8230;]") ? (<a href={translatedHref}>...</a>) : ""}</div>
+</article>
 
 <style>
-	.article {
-		list-style: none;
-		width: 43vw;
-		height: fit-content;
-		border-radius: 10px;
-		border: var(--font-color) 1px solid;
-		padding: .4em;
-		margin: 0px;
-	}
-
-	.article > div > h2 {
-		margin-top: 0px;
-		text-align: center;
-	}
-
-	.article > div > h2 > a {
-		color: var(--font-color);
-		text-decoration: none;
-	}
-
-	.article > div {
-		margin: .2em;
-		margin-bottom: 1em;
-	}
-
 	.article-content {
 		margin-bottom: 0px;
-	}
-
-	.article > div > a {
-		text-decoration: none;
-		color: aquamarine;
 	}
 
 	.article-info {
@@ -131,10 +101,8 @@ if (title.toUpperCase() == title) {
 		font-weight: 600;
 	}
 
-	@media (max-width: 768px) {
-		.article {
-			font-size: 80%;
-			width: 90vw;
-		}
+	.article-content > a {
+		color: cyan;
+		text-decoration: none;
 	}
 </style>

@@ -4,7 +4,7 @@ export interface Props {
 	noShout?: boolean;
 }
 
-const { title, noShout} = Astro.props;
+const { title, noShout } = Astro.props;
 ---
 
 <!DOCTYPE html>
@@ -14,43 +14,46 @@ const { title, noShout} = Astro.props;
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
+		<link
+			rel="stylesheet"
+			href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css"
+		/>
 		<title>{title}</title>
 	</head>
 	<body>
-		<header class="dark">
-			<h1 title={noShout?"Titulek předělaný, aby učitel nepoužíval jen capslock (může obsahovat chyby)":"Titulek článku"} set:html={title} />
+		<header>
+			<h1
+				title={noShout
+					? "Titulek předělaný, aby učitel nepoužíval jen capslock (může obsahovat chyby)"
+					: "Titulek článku"}
+				set:html={title}
+			/>
 			<nav>
-				<a href="/" id="nav-home" title="Hlavní stránka"
-					>Hlavní stránka</a
-				>
-				<a href="/novinky" id="nav-news" title="Novinky">Novinky</a>
+				<a href="/" id="nav-home" title="Hlavní stránka"></a>
+				<a href="/novinky" id="nav-news" title="Novinky"></a>
 				<a
 					href="/uspechy-skoly"
 					id="nav-accomplishments"
-					title="Úspěchy školy">Úspěchy</a
-				>
+					title="Úspěchy školy"></a>
 				<a
 					href="https://bakalari.gymlit.cz"
 					id="nav-baka"
-					title="Bakaláři">Bakaláři</a
-				>
+					title="Bakaláři"></a>
 				<a
 					href="https://www.strava.cz/strava5/Jidelnicky?zarizeni=0837&Tisk=true"
 					id="nav-food"
-					title="Jídelníček">Jídelníček</a
-				>
+					title="Jídelníček"></a>
 				<a
 					href="https://skola.tritius.cz/library/gymlit"
 					id="nav-lib"
-					title="Knihovna">Knihovna</a
-				>
-				<a href="/info" id="nav-info" title="Informace o stránce">Info</a>
+					title="Knihovna"></a>
+				<a href="/info" id="nav-info" title="Informace o stránce"></a>
 			</nav>
 		</header>
 		<slot />
 		<footer>
 			<div class="siteinfo">
-				Vytvořil <a href="https://github.com/PanJohnny/FastGymlit"
+				Vytvořil <a href="https://github.com/PanJohnny"
 					>Honza ♥</a
 				>
 			</div>
@@ -58,39 +61,20 @@ const { title, noShout} = Astro.props;
 	</body>
 </html>
 <style is:global>
-	:root {
-		--default-font-size: 1.1rem;
-		--font-color: rgb(37, 37, 37);
-		--background-color: rgb(242, 242, 242);
-		--image-icon-filter: none;
-	}
-
 	a {
-		color: var(--font-color);
-		text-decoration-color: orange;
+		color: inherit;
 	}
 
 	code {
-		font-family: 'Courier New', Courier, monospace;
+		font-family: "Courier New", Courier, monospace;
 	}
 
 	body {
-		margin: 0px;
-		width: 100%;
-		height: 100%;
 		font-family: "Poppins", sans-serif;
-		font-size: var(--default-font-size);
-		background-color: var(--background-color);
-		color: var(--font-color);
-		padding: 0px;
 	}
 
 	header {
-		margin-top: 0px;
-		margin-bottom: 2em;
-		width: 100%;
 		text-align: center;
-		left: 0px;
 	}
 
 	header > * {
@@ -101,8 +85,6 @@ const { title, noShout} = Astro.props;
 
 	@media (prefers-color-scheme: dark) {
 		body {
-			--font-color: rgb(242, 242, 242);
-			--background-color: rgb(37, 37, 37);
 			--image-icon-filter: invert(1);
 		}
 	}
@@ -124,20 +106,10 @@ const { title, noShout} = Astro.props;
 		margin: 1em;
 	}
 
-	.gymlitopen {
+	.left-foot {
 		position: fixed;
 		left: 0.3em;
 		bottom: 0.3em;
-	}
-
-	.gymlitopen::after {
-		content: "Otevřít na www.gymlit.cz";
-		color: var(--font-color);
-		background-color: rgb(0, 195, 255);
-		padding: 0.2em;
-		text-decoration: none;
-		border-radius: 5px;
-		font-weight: bold;
 	}
 
 	.siteinfo {
@@ -160,22 +132,8 @@ const { title, noShout} = Astro.props;
 		height: var(--default-font-size);
 		background: no-repeat;
 		filter: var(--image-icon-filter);
-	}
-
-	@media (max-width: 900px) {
-		nav > a {
-			font-size: 0px;
-		}
-
-		nav > a::before {
-			width: 2em;
-			height: 2em;
-		}
-
-		body {
-			width: fit-content;
-			height: fit-content;
-		}
+		width: 2em;
+		height: 2em;
 	}
 
 	#nav-home::before {
@@ -206,31 +164,8 @@ const { title, noShout} = Astro.props;
 		background-image: url("/icons/info.svg");
 	}
 
-	@media (min-width: 1500px) {
-		header {
-			width: 100%;
-		}
-
-		body {
-			width: 100%;
-			margin-right: 0px;
-			font-size: 130%;
-			--default-font-size: 1.3rem;
-		}
-	}
-
-	@media (max-width: 400px) {
-		.gymlitopen::after {
-			content: "www.gymlit.cz";
-		}
-	}
-
 	img {
 		max-width: 80vw;
 		height: auto;
-	}
-
-	footer {
-		margin-bottom: 5em;
 	}
 </style>
