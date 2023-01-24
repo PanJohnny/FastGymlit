@@ -1,0 +1,75 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { XMLParser } from "fast-xml-parser";
+
+interface SearchResult {
+    title: string;
+    author: string;
+}
+
+const results: SearchResult[] = [];
+
+if (Astro.url.searchParams.has("q")) {
+    const query = Astro.url.searchParams.get("q");
+
+    const rss = await fetch(
+        "https://skola.tritius.cz/library/gymlit/search/rss?q=" + query
+    ).then((data) => data.text());
+    const parser = new XMLParser();
+    const json = parser.parse(rss);
+
+    if (json.rss != undefined && json.rss.channel != undefined && json.rss.channel.item != undefined) {
+        json.rss.channel.item.forEach((item) => {
+            results.push(item as SearchResult);
+        });
+    }
+}
+---
+
+<Layout title="Katalog školní knihovny">
+    <main class="container">
+        <input
+            type="search"
+            name="search"
+            id="search"
+            onkeydown="searchFor(event)"
+            value={Astro.url.searchParams.get("q")}
+            placeholder="Vyhledejte položku"
+            autofocus
+        />
+        <table>
+            {
+                results.length > 0 ? (
+                    <thead>
+                        <tr>
+                            <th>Kniha</th>
+                            <th>Autor</th>
+                        </tr>
+                    </thead>
+                ) : null
+            }
+            {
+                results.map((r) => (
+                    <tr>
+                        <td>{r.title}</td>
+                        <td>{r.author}</td>
+                    </tr>
+                ))
+            }
+        </table>
+        <p>
+            Zdroj: <a href={"https://skola.tritius.cz/library/gymlit"}
+                >https://skola.tritius.cz/library/gymlit</a
+            >
+        </p>
+    </main>
+</Layout>
+
+<script is:inline>
+    function searchFor(event) {
+        if (event.key == "Enter") {
+            document.location.search =
+                "?q=" + document.querySelector("#search").value;
+        }
+    }
+</script>

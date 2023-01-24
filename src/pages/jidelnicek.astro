@@ -1,6 +1,6 @@
 ---
 import { JSDOM } from "jsdom";
-import Layout from "../../layouts/Layout.astro";
+import Layout from "../layouts/Layout.astro";
 
 interface Food {
     rows: Row[];
@@ -33,10 +33,13 @@ objednavky.forEach((o) => {
         });
     });
 
-    foods.push({
-        day: den,
-        rows: rows,
-    });
+    // Detect non inputed lunches
+    if (rows.filter((row) => row.name == "Oběd č. 1").length == 0) {
+        foods.push({
+            day: den,
+            rows: rows,
+        });
+    }
 });
 ---
 
@@ -69,5 +72,9 @@ objednavky.forEach((o) => {
                 </article>
             ))
         }
+
+        <p>
+            Tento jídelníček byl čerpán z <a href="https://www.strava.cz/strava5/Jidelnicky?zarizeni=0837&Tisk=true">https://www.strava.cz/strava5/Jidelnicky?zarizeni=0837&Tisk=true</a>
+        </p>
     </main>
 </Layout>
