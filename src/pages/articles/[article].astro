@@ -74,13 +74,14 @@ if (art.title.toUpperCase() == art.title) {
 
     <footer>
         <div class="left-foot">
-            <a href={art.link} role="button">Otevřít originál</a>
+            <a href={art.link} role="button" id="original">O</a>
             <a
                 type="button"
                 title="Zformátujte text, tak aby byl čitelnější"
                 href="javascript:textSimplify()"
                 role="button"
-                class="secondary">Vymazat formátování</a>
+                class="secondary"
+                id="simplify">F</a>
         </div>
     </footer>
 </Layout>
@@ -96,3 +97,22 @@ if (art.title.toUpperCase() == art.title) {
         }
     }
 </script>
+
+<style>
+
+    @media (min-width:425px) {
+        #original::after {
+            content: "riginál";
+        }
+
+        #simplify::after {
+            content: "ormátovat";
+        }
+    }
+
+    @media (max-width:280px) {
+        .left-foot {
+            display: none;
+        }
+    }
+</style>
