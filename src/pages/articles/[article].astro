@@ -87,19 +87,30 @@ if (art.title.toUpperCase() == art.title) {
 </Layout>
 
 <script is:inline>
+    const attributeBlacklist = ["style", "class", "align", "width", "height", "float"]
+
     function textSimplify() {
-        const article = document.querySelector("#article-body");
-        for (let index = 0; index < article.children.length; index++) {
-            const element = article.children[index];
-            if (element.hasAttribute("style")) element.removeAttribute("style");
-            if (element.hasAttribute("class")) element.removeAttribute("class");
-            if (element.hasAttribute("align")) element.removeAttribute("align");
+        const elements = document.querySelector("#article-body").querySelectorAll("*");
+        for (let index = 0; index < elements.length; index++) {
+            const element = elements[index];
+            attributeBlacklist.forEach((a) => {
+                if (element.hasAttribute(a)) {
+                    element.removeAttribute(a);
+                }
+            });
+
+            if (element.innerHTML.replace(/&nbsp;/g,"").trim().length == 0) {
+                element.remove();
+            }
         }
     }
 </script>
 
 <style>
 
+    /*
+        Tohohle si moc nevšímejte, jen taková věcička no
+    */
     @media (min-width:425px) {
         #original::after {
             content: "riginál";
@@ -114,5 +125,9 @@ if (art.title.toUpperCase() == art.title) {
         .left-foot {
             display: none;
         }
+    }
+
+    img {
+        margin: 1em;
     }
 </style>
