@@ -99,7 +99,9 @@ if (art.title.toUpperCase() == art.title) {
                 }
             });
 
-            if ((element.nodeName == "p" || element.nodeName == "div") && element.innerHTML.replace(/&nbsp;/g,"").trim().length == 0) {
+            console.log(element.nodeName);
+
+            if ((element.nodeName == "P" || element.nodeName == "SUP") && element.innerHTML.replace(/&nbsp;/g,"").trim().length == 0) {
                 element.remove();
             }
         }
