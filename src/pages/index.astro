@@ -7,7 +7,7 @@ import Article from "../components/Article.astro";
 
 <Layout title="Domov | FastGymlit">
 	<main>
-		<div id="celeb"><h3>Škola slaví 50 let</h3> <a role="button" href="https://www.gymlit.cz/wp-content/uploads/2023/05/Almanach-Gymlit-2023.pdf">Otevřít almanach</a><br /><a role="button" href=">https://www.gymlit.cz/wp-content/uploads/2023/04/Program-oslav-6_6_-page-001.jpg">Otevřít program</a><br />Nebo kliknutím <a href="https://www.gymlit.cz/50-vyroci/">zde</a> otevřete sekci stránkách školy.</div>
+		<div id="celeb"><h3>Škola slaví 50 let</h3> <a role="button" href="https://www.gymlit.cz/wp-content/uploads/2023/05/Almanach-Gymlit-2023.pdf">Otevřít almanach</a><br /><br /><a role="button" href=">https://www.gymlit.cz/wp-content/uploads/2023/04/Program-oslav-6_6_-page-001.jpg">Otevřít program</a><br />Nebo kliknutím <a href="https://www.gymlit.cz/50-vyroci/">zde</a> otevřete sekci stránkách školy.</div>
 		<Articles category={Category.Zadna} page={parseInt(Astro.url.searchParams.get("page"))} />
 	</main>
 </Layout>
@@ -23,5 +23,6 @@ import Article from "../components/Article.astro";
 	#celeb {
 		border-bottom: 1px solid green;
 		border-top: 1px solid green;
+		text-align: center;
 	}
 </style>
