@@ -93,6 +93,9 @@ if (art.title.toUpperCase() == art.title) {
         const elements = document.querySelector("#article-body").querySelectorAll("*");
         for (let index = 0; index < elements.length; index++) {
             const element = elements[index];
+            if (element.hasAttribute("src") && element.getAttribute("src").includes("emoji")) {
+                continue;
+            }
             attributeBlacklist.forEach((a) => {
                 if (element.hasAttribute(a)) {
                     element.removeAttribute(a);
