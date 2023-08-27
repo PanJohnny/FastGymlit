@@ -35,6 +35,8 @@ objednavky.forEach((o) => {
 
     // Detect non inputed lunches
     if (rows.filter((row) => row.name == "Oběd č. 1").length == 0) {
+        if(rows[0].name.trim().length == 0)
+            return;
         foods.push({
             day: den,
             rows: rows,
@@ -72,7 +74,10 @@ objednavky.forEach((o) => {
                 </article>
             ))
         }
-
+        <p>
+            Odhadovaná cena za dostupné položky: <b>{foods.length * 50}</b> Kč
+            <hr/>
+        </p>
         <p>
             Tento jídelníček byl čerpán z <a href="https://www.strava.cz/strava5/Jidelnicky?zarizeni=0837&Tisk=true">https://www.strava.cz/strava5/Jidelnicky?zarizeni=0837&Tisk=true</a>
         </p>
