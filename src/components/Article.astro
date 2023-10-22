@@ -9,7 +9,7 @@ export interface Props {
 	searchParams: string;
 }
 
-const { href, title, description, body, author, date, searchParams} = Astro.props;
+let { href, title, description, body, author, date, searchParams} = Astro.props;
 
 // translate href
 const translatedHref = "/articles/" + href.split("/")[3] + searchParams
@@ -88,7 +88,7 @@ if (title.toUpperCase() == title) {
 	<div class="article-content"><span set:html={description.replace(/[\[&#8230;\]]/g, "")}></span>{description.includes("[&#8230;]") ? (<a href={translatedHref}>...</a>) : ""}</div>
 </article>
 
-<style>
+<style type="scss">
 	.article-content {
 		margin-bottom: 0px;
 	}

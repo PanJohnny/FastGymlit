@@ -5,7 +5,7 @@ import { Category, getFeed } from "../api/feed";
 const page = Astro.url.searchParams.get("page");
 const category = Object.keys(Category)[
     Object.values(Category).indexOf(
-        Astro.url.searchParams.get("category") as unknown as Category
+        Astro.url.searchParams.get("category") as unknown as Category,
     )
 ] as Category;
 
@@ -33,7 +33,7 @@ if (!page) {
             {
                 status: 400,
                 headers: { "Content-Type": "text/html;charset=utf-8" },
-            }
+            },
         );
 } else {
     const pInt = parseInt(page);
@@ -59,41 +59,55 @@ if (art.title.toUpperCase() == art.title) {
 
 <Layout title={noShout ? noShoutTitle : art.title} noShout={noShout}>
     <main class="container">
-        <h3
-            >Kategorie: <a
-                href={"/" +
-                    art.category
-                        .toLowerCase()
-                        .replace(/ /g, "-")
-                        .normalize("NFD")
-                        .replace(/[\u0300-\u036f]/g, "")}>{art.category}</a
-            >
-    </h3>
-        <div id="article-body" set:html={art["content:encoded"]} />
+        <input
+            type="button"
+            title="Zformátujte text, tak aby byl čitelnější"
+            onclick="textSimplify()"
+            role="button"
+            class="secondary"
+            id="simplify"
+            value="Vymazat formátování"
+        />
     </main>
-
-    <footer>
-        <div class="left-foot">
-            <a href={art.link} role="button" id="original">O</a>
-            <a
-                type="button"
-                title="Zformátujte text, tak aby byl čitelnější"
-                href="javascript:textSimplify()"
-                role="button"
-                class="secondary"
-                id="simplify">F</a>
-        </div>
-    </footer>
+    <h3>
+        Kategorie: <a
+            href={"/" +
+                art.category
+                    .toLowerCase()
+                    .replace(/ /g, "-")
+                    .normalize("NFD")
+                    .replace(/[\u0300-\u036f]/g, "")}>{art.category}</a
+        >
+    </h3>
+    <div id="article-body" set:html={art["content:encoded"]} />
 </Layout>
 
+<footer>
+    <div class="left-foot">
+        <a href={art.link} role="button" id="original">Zdroj</a>
+    </div>
+</footer>
+
 <script is:inline>
-    const attributeBlacklist = ["style", "class", "align", "width", "height", "float"]
+    const attributeBlacklist = [
+        "style",
+        "class",
+        "align",
+        "width",
+        "height",
+        "float",
+    ];
 
     function textSimplify() {
-        const elements = document.querySelector("#article-body").querySelectorAll("*");
+        const elements = document
+            .querySelector("#article-body")
+            .querySelectorAll("*");
         for (let index = 0; index < elements.length; index++) {
             const element = elements[index];
-            if (element.hasAttribute("src") && element.getAttribute("src").includes("emoji")) {
+            if (
+                element.hasAttribute("src") &&
+                element.getAttribute("src").includes("emoji")
+            ) {
                 continue;
             }
             attributeBlacklist.forEach((a) => {
@@ -104,7 +118,10 @@ if (art.title.toUpperCase() == art.title) {
 
             console.log(element.nodeName);
 
-            if ((element.nodeName == "P" || element.nodeName == "SUP") && element.innerHTML.replace(/&nbsp;/g,"").trim().length == 0) {
+            if (
+                (element.nodeName == "P" || element.nodeName == "SUP") &&
+                element.innerHTML.replace(/&nbsp;/g, "").trim().length == 0
+            ) {
                 element.remove();
             }
         }
@@ -112,26 +129,6 @@ if (art.title.toUpperCase() == art.title) {
 </script>
 
 <style>
-
-    /*
-        Tohohle si moc nevšímejte, jen taková věcička no
-    */
-    @media (min-width:425px) {
-        #original::after {
-            content: "riginál";
-        }
-
-        #simplify::after {
-            content: "ormátovat";
-        }
-    }
-
-    @media (max-width:280px) {
-        .left-foot {
-            display: none;
-        }
-    }
-
     img {
         margin: 1em;
     }

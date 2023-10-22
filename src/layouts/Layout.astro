@@ -1,4 +1,5 @@
 ---
+import Icon from "../components/Icon.astro";
 export interface Props {
 	title: string;
 	noShout?: boolean;
@@ -7,18 +8,14 @@ export interface Props {
 const { title, noShout } = Astro.props;
 ---
 
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="cs">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
-		<link
-			rel="stylesheet"
-			href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css"
-		/>
-		<title>{title}</title>
+		<title>{title + (title.includes("FastGymlit")?"":" | FastGymlit")}</title>
 	</head>
 	<body>
 		<header>
@@ -29,35 +26,47 @@ const { title, noShout } = Astro.props;
 				set:html={title}
 			/>
 			<nav>
-				<a href="/" id="nav-home" title="Hlavní stránka"></a>
-				<a href="/novinky" id="nav-news" title="Novinky"></a>
-				<a
+				<Icon
+					href="/"
+					src="/house.svg"
+					title="Hlavní stránka"
+					size={2}
+				/>
+				<Icon
+					href="/novinky"
+					src="/news.svg"
+					title="Novinky"
+					size={2}
+				/>
+				<Icon
 					href="/uspechy-skoly"
-					id="nav-accomplishments"
-					title="Úspěchy školy"></a>
-				<a
+					src="/graduation_cap.svg"
+					title="Úspěchy školy"
+					size={2}
+				/>
+				<Icon
 					href="/jidelnicek"
-					id="nav-food"
-					title="Jídelníček"></a>
-				<a
+					src="/utensils.svg"
+					title="Jídelníček"
+					size={2}
+				/>
+				<Icon
 					href="/knihovna"
-					id="nav-lib"
-					title="Knihovna"></a>
-				<a href="/info" id="nav-info" title="Informace o stránce"></a>
+					src="/book.svg"
+					title="Knihovna"
+					size={2}
+				/>
 			</nav>
 		</header>
 		<slot />
 		<footer>
 			<div class="siteinfo">
-				Vytvořil <a href="https://github.com/PanJohnny"
-					>Honza ♥</a
-				>
+				Vytvořil <a href="https://github.com/PanJohnny">Jan Štefanča</a> | <Icon title="Informace" src="/info.svg" href="/info" />
 			</div>
 		</footer>
 	</body>
 </html>
-<style is:global>
-
+<style is:global type="scss">
 	code {
 		font-family: "Courier New", Courier, monospace;
 	}
@@ -76,10 +85,11 @@ const { title, noShout } = Astro.props;
 		margin-right: 0px;
 	}
 
-	@media (prefers-color-scheme: dark) {
-		body {
-			--image-icon-filter: invert(1);
-		}
+	footer {
+		display: flex;
+		width: 100%;
+		align-items: center;
+		justify-content: center;
 	}
 
 	nav {
@@ -89,71 +99,8 @@ const { title, noShout } = Astro.props;
 		flex-direction: row;
 	}
 
-	nav > a {
-		color: var(--font-color);
-		text-decoration: none;
-		font-size: 1.5em;
-	}
-
 	main {
 		margin: 1em;
-	}
-
-	.left-foot {
-		position: fixed;
-		left: 0.3em;
-		bottom: 0.3em;
-	}
-
-	.siteinfo {
-		position: fixed;
-		bottom: 0.3em;
-		right: 0em;
-		padding: 0.2em;
-		padding-right: 0.3em;
-		background-color: var(--background-color);
-		border: solid var(--font-color) 1px;
-		border-radius: 2px;
-	}
-
-	nav > a::before {
-		content: "";
-		font-size: initial;
-		display: inline-block;
-		width: var(--default-font-size);
-		height: var(--default-font-size);
-		background: no-repeat;
-		filter: var(--image-icon-filter);
-		width: 2em;
-		height: 2em;
-	}
-
-	#nav-home::before {
-		background-image: url("/icons/house.svg");
-	}
-
-	#nav-news::before {
-		background-image: url("/icons/news.svg");
-	}
-
-	#nav-baka::before {
-		background-image: url("/icons/graduation_cap.svg");
-	}
-
-	#nav-food::before {
-		background-image: url("/icons/utensils.svg");
-	}
-
-	#nav-accomplishments::before {
-		background-image: url("/icons/trophy.svg");
-	}
-
-	#nav-lib::before {
-		background-image: url("/icons/book.svg");
-	}
-
-	#nav-info::before {
-		background-image: url("/icons/info.svg");
 	}
 
 	img {

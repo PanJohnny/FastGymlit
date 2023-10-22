@@ -5,17 +5,23 @@ import Articles from "../components/Articles.astro";
 import Article from "../components/Article.astro";
 ---
 
-<Layout title="Domov | FastGymlit">
+<Layout title="FastGymlit">
 	<main>
+		<div class="pin">
+			<Article author="Jan Štefanča" body="Tyto stránky momentálně prochází redesignem, můžete si vyzkoušet beta verzi." date="11. 7. 2023" description="Tyto stránky momentálně prochází redesignem, můžete si vyzkoušet beta verzi." href="" searchParams="../../../beta" title="Vyzkoušejte si beta verzi"></Article>
+		</div>
 		<Articles category={Category.Zadna} page={parseInt(Astro.url.searchParams.get("page"))} />
 	</main>
 </Layout>
 
 <style>
-
-	@media (max-width: 768px) {
-		body {
-			display: inline;
-		}
+	.pin::before {
+		content: "📌";
+	}
+	
+	.pin {
+		padding: 1em;
+		border: 1px solid salmon;
+		border-radius: 10px;
 	}
 </style>

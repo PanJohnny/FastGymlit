@@ -4,7 +4,7 @@ import Articles from "../components/Articles.astro";
 import { Category } from "./api/feed";
 ---
 
-<Layout title="Úspěchy školy | FastGymlit">
+<Layout title="Úspěchy školy">
 	<main>
 		<div class="articles">
 			<Articles category={Category.Uspechy} page={parseInt(Astro.url.searchParams.get("page"))}></Articles>

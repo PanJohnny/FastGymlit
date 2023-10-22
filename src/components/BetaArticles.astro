@@ -1,0 +1,52 @@
+---
+import { Category, getFeed } from "../pages/api/feed";
+import BetaArticle from "./BetaArticle.astro";
+
+interface Props {
+    category:Category,
+    page:number,
+}
+
+const {category, page} = Astro.props as Props;
+
+const pageNormal:number = page?page:1;
+const back = pageNormal - 1;
+const next = pageNormal + 1;
+
+const articles = await getFeed(category, pageNormal);
+
+
+const searchParams = "?category=" + category + "&page=" + pageNormal;
+---
+
+<div class="container">
+    {
+        articles.map((article: any) => (
+            <BetaArticle
+                title={article.title}
+                href={article.link}
+                author={article["dc:creator"]}
+                date={article.pubDate}
+                body={article["content:encoded"]}
+                description={article.description}
+                searchParams={searchParams}
+            />
+        ))
+    }
+</div>
+<div class="page-control">
+    {back > 0?(<a href={"?page=" + back}>←</a>):""} <span class="page-control-index">{pageNormal}</span> <a href={"?page=" + next}>→</a>
+</div>
+
+<style>
+    .page-control {
+        text-align: center;
+        margin: 1em;
+        font-size: 1.3em;
+        color: orange;
+    }
+
+    .page-control > a {
+        text-decoration: none;
+    }
+</style>

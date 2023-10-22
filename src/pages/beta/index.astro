@@ -1,0 +1,9 @@
+---
+import BetaArticles from "../../components/BetaArticles.astro";
+import Layout from "../../layouts/Layout.astro";
+import { Category } from "../api/feed";
+---
+
+<Layout title="(b) FastGymlit">
+    <BetaArticles category={Category.Zadna} page={parseInt(Astro.url.searchParams.get("page"))}></BetaArticles>
+</Layout>
