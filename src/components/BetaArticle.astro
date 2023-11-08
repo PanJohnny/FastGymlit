@@ -90,7 +90,7 @@ if (title.toUpperCase() == title) {
 		>
 		<span>{new Date(date).toLocaleDateString("cs-CZ")}</span>
 	</div>
-	<div class="article-content load"></div>
+	<div class="article-content load">Načítání</div>
 
 	<temp aria-hidden hidden data-body={body}></temp>
 </article>
@@ -113,8 +113,28 @@ if (title.toUpperCase() == title) {
 		color: cyan;
 		text-decoration: none;
 	}
+
+	.load::after {
+		content: "";
+		animation: loading infinite linear 1s;
+	}
+
+	@keyframes loading {
+		0% {
+			content: ".";
+		}
+
+		33% {
+			content: "..";
+		}
+
+		66% {
+			content: "...";
+		}
+	}
 </style>
 <script>
+window.onload = async () => {
 	const blockedElements = ["iframe", "script", "hr"];
 
 	const allowedAttributes = [
@@ -152,6 +172,11 @@ if (title.toUpperCase() == title) {
 				el.loading = "lazy";
 				el.style.maxHeight = "30vh";
 				el.style.width = "auto";
+
+				if (el.src.includes("emoji")) {
+					el.style.width = "1em";
+					el.style.height = "1em";
+				}
 			}
 		});
 
@@ -238,6 +263,8 @@ if (title.toUpperCase() == title) {
 		}
 
 		document.querySelectorAll(".article-content")[i].appendChild(doc);
+		document.querySelectorAll(".article-content")[i].classList.remove("load");
 		i++;
 	});
+}
 </script>
