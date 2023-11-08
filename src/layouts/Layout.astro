@@ -1,5 +1,6 @@
 ---
 import Icon from "../components/Icon.astro";
+import { ViewTransitions } from 'astro:transitions';
 export interface Props {
 	title: string;
 	noShout?: boolean;
@@ -16,6 +17,7 @@ const { title, noShout } = Astro.props;
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title + (title.includes("FastGymlit")?"":" | FastGymlit")}</title>
+		<ViewTransitions />
 	</head>
 	<body>
 		<header>
