@@ -261,9 +261,10 @@ window.onload = async () => {
 
 			doc.appendChild(open);
 		}
-
-		document.querySelectorAll(".article-content")[i].appendChild(doc);
-		document.querySelectorAll(".article-content")[i].classList.remove("load");
+		const content = document.querySelectorAll(".article-content")[i];
+		content.innerHTML = "";
+		content.appendChild(doc);
+		content.classList.remove("load");
 		i++;
 	});
 }
