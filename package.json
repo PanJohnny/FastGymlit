@@ -15,7 +15,7 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/vercel": "^3.0.0",
+    "@astrojs/vercel": "^5.1.0",
     "astro": "^3.4.3",
     "fast-xml-parser": "^4.0.14",
     "jsdom": "^21.1.0"
