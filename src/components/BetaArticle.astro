@@ -134,7 +134,7 @@ if (title.toUpperCase() == title) {
 	}
 </style>
 <script>
-window.onload = async () => {
+document.addEventListener("astro:page-load", async () => {
 	const blockedElements = ["iframe", "script", "hr"];
 
 	const allowedAttributes = [
@@ -267,5 +267,5 @@ window.onload = async () => {
 		content.classList.remove("load");
 		i++;
 	});
-}
+});
 </script>
