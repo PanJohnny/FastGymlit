@@ -13,19 +13,19 @@ interface Row {
 }
 
 const dom = await JSDOM.fromURL(
-    "https://www.strava.cz/strava5/Jidelnicky?zarizeni=0837&Tisk=true"
+    "https://www.strava.cz/strava5/Jidelnicky?zarizeni=0837&Tisk=true",
 );
 
 const doc = dom.window.document;
 
 const objednavky = doc.querySelectorAll(
-    "#jidelnicky-obsah > div.jidelnicky.jidelnicky-sekce > div:nth-child(2) > .objednavka"
+    "#jidelnicky-obsah > div.jidelnicky.jidelnicky-sekce > div:nth-child(2) > .objednavka",
 );
 const foods: Food[] = [];
 
 objednavky.forEach((o) => {
     const den = o.querySelector(".den").textContent;
-    const rows: Row[] = [];
+    let rows: Row[] = [];
     o.querySelectorAll(".jidla > .jidlo > .dialog").forEach((row) => {
         rows.push({
             title: row.querySelector(".popis").textContent,
@@ -33,10 +33,13 @@ objednavky.forEach((o) => {
         });
     });
 
-    // Detect non inputed lunches
-    if (rows.filter((row) => row.name == "Oběd č. 1").length == 0) {
-        if(rows[0].name.trim().length == 0)
-            return;
+    
+    // Remove blank fields
+    rows = rows.filter((row) => row.name.trim().length != 0);
+
+    // Detect non inputed lunch
+    if (rows.filter((row) => row.title == "Oběd č. 1").length == 0) {
+        if (rows[0].name.trim().length == 0) return;
         foods.push({
             day: den,
             rows: rows,
@@ -54,7 +57,7 @@ objednavky.forEach((o) => {
                     <table>
                         <thead>
                             <tr>
-                                <th>#</th>
+                                <th />
                                 <th>Název</th>
                             </tr>
                         </thead>
@@ -76,10 +79,31 @@ objednavky.forEach((o) => {
         }
         <p>
             Odhadovaná cena za dostupné položky: <b>{foods.length * 50}</b> Kč
-            <hr/>
+            <hr />
         </p>
         <p>
-            Tento jídelníček byl čerpán z <a href="https://www.strava.cz/strava5/Jidelnicky?zarizeni=0837&Tisk=true">https://www.strava.cz/strava5/Jidelnicky?zarizeni=0837&Tisk=true</a>
+            Tento jídelníček byl čerpán z <a
+                href="https://www.strava.cz/strava5/Jidelnicky?zarizeni=0837&Tisk=true"
+                >https://www.strava.cz/strava5/Jidelnicky?zarizeni=0837&Tisk=true</a
+            >
         </p>
     </main>
 </Layout>
+
+<style>
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    td,
+    th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #dddddd;
+    }
+</style>

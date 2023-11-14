@@ -1,0 +1,21 @@
+---
+import BetaArticles from "../../components/BetaArticles.astro";
+import Layout from "../../layouts/Layout.astro";
+import { Category } from "../api/feed";
+---
+
+<Layout title="(b) Novinky">
+	<main>
+		<div class="articles">
+			<BetaArticles category={Category.Novinky} page={parseInt(Astro.url.searchParams.get("page"))}></Articles>
+		</div>
+	</main>
+</Layout>
+
+<style>
+	@media (max-width: 768px) {
+		body {
+			display: inline;
+		}
+	}
+</style>

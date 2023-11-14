@@ -1,19 +1,22 @@
 ---
 interface Props {
-    title: string;
+    title?: string;
     src: string;
-    href: string;
+    href?: string;
     size?: number;
     ariaHidden?: boolean;
+    blank?: boolean;
 }
 
-const { title, src, href, size, ariaHidden} = Astro.props;
+const { title, src, href, size, ariaHidden, blank} = Astro.props;
+
+const target = blank?"_blank noopener noreferer":undefined;
 ---
 
-<a href={href} title={title} style={"--icon-src: url(/icons" + src + "); --size: " + (size?size:1) + "em;"} aria-hidden={ariaHidden}></a>
+{href?<a href={href} title={title} style={"--icon-src: url(/icons" + src + "); --size: " + (size?size:1) + "em;"} target={target} aria-hidden={ariaHidden}></a>:<i title={title} aria-hidden={true} style={"--icon-src: url(/icons" + src + "); --size: " + (size?size:1) + "em;"}></i>}
 
 <style type="scss">
-    a {
+    * {
         color: black;
         text-decoration: none;
         font-size: 1.5em;
@@ -27,9 +30,5 @@ const { title, src, href, size, ariaHidden} = Astro.props;
             background: no-repeat;
             background-image: var(--icon-src);
         }
-    }
-
-    @media (min-width: 1200px) {
-        
     }
 </style>

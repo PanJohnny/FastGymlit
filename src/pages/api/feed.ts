@@ -1,8 +1,22 @@
+import type { AstroGlobal } from "astro";
 import { XMLParser } from "fast-xml-parser";
 const parser = new XMLParser();
 
-export async function get({ params }) {
-  return new Response(JSON.stringify(await getFeed()), {
+export async function GET(Astro: AstroGlobal) {
+  let page = Astro.url.searchParams.get("page") || 0;
+
+  // @ts-ignore Just typescript being crazy with enums
+  let category = Object.keys(Category)[Object.values(Category).indexOf(Astro.url.searchParams.get("category"))];
+  console.log(category);
+  
+
+  if (page !== 0)
+    page = parseInt(page + "");
+
+  // @ts-ignore
+  const feed = await getFeed(category, page);
+
+  return new Response(JSON.stringify(feed), {
     status: 200,
     headers: {
       "Content-Type": "application/json",

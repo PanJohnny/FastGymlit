@@ -20,7 +20,15 @@ const { title, noShout } = Astro.props;
 		<ViewTransitions />
 	</head>
 	<body>
-		<header>
+		<noscript>
+			 <dialog open="modal">
+				<h2>Ach jo...</h2>
+				<b>Tahle stránka používá JavaScript pro některé své funkce. No, vaše rozhodnutí...</b>
+				<p>Tenhle modal nezavřete :*)</p>
+				<i lang="cs">Prosím povolte JavaScript, žádný data Vám nekradu.</i>
+			 </dialog>
+		</noscript>
+		<header transition:animate="slide">
 			<h1
 				title={noShout
 					? "Titulek předělaný, aby učitel nepoužíval jen capslock (může obsahovat chyby)"
@@ -61,7 +69,7 @@ const { title, noShout } = Astro.props;
 			</nav>
 		</header>
 		<slot />
-		<footer>
+		<footer transition:persist>
 			<div class="siteinfo">
 				Vytvořil <a href="https://github.com/PanJohnny">Jan Štefanča</a> | <Icon title="Informace" src="/info.svg" href="/info" />
 			</div>
@@ -108,5 +116,13 @@ const { title, noShout } = Astro.props;
 	img {
 		max-width: 80vw;
 		height: auto;
+	}
+
+	noscript > dialog {
+		background-color: red;
+		z-index: 10;
+		top: 50%;
+		left: 50%;
+		transform: translate(-100%, -50%);
 	}
 </style>

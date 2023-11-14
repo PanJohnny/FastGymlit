@@ -1,4 +1,5 @@
 ---
+import Icon from "./Icon.astro";
 export interface Props {
 	title: string;
 	description: string;
@@ -66,26 +67,43 @@ if (title.toUpperCase() == title) {
 	noShoutTitle =
 		title.charAt(0).toUpperCase() + title.substring(1).toLocaleLowerCase();
 }
+
+// translate href
+const translatedHref = "/articles/" + href.split("/")[3] + searchParams;
 ---
 
 <article>
 	<div>
 		<h2>
-			<a
-				href={href}
-				title={noShout
-					? "Titulek předělaný, aby učitel nepoužíval jen capslock (může obsahovat chyby)"
-					: "Titulek článku"}
-				set:html={noShout ? noShoutTitle : title}
-			/>
+			<a href={translatedHref} set:html={noShout ? noShoutTitle : title} />
+			{
+				noShout ? ( <>{" "}</>
+					<Icon
+						src="/question.svg"
+						title="Titulek předělaný, aby učitel nepoužíval jen capslock (může obsahovat chyby)"
+						href="/info#capslockfuj"
+						blank
+					/>
+				) : undefined
+			}
 		</h2>
 	</div>
 	<div class="article-info">
-		<span title={titleAuthor}
+		<span
 			>{
-				shouldMaybeShowNewAuthor
-					? authorMaybe
-					: author.replace("Administ", "Ředitelství")
+				shouldMaybeShowNewAuthor ? (
+					<>
+						<>{authorMaybe + " "}</>
+						<Icon
+							src="/question.svg"
+							title={titleAuthor}
+							href="/info#odhadnutiautora"
+							blank
+						/>
+					</>
+				) : (
+					author.replace("Administ", "Ředitelství")
+				)
 			}</span
 		>
 		<span>{new Date(date).toLocaleDateString("cs-CZ")}</span>
@@ -134,138 +152,146 @@ if (title.toUpperCase() == title) {
 	}
 </style>
 <script>
-document.addEventListener("astro:page-load", async () => {
-	const blockedElements = ["iframe", "script", "hr"];
+	document.addEventListener("astro:page-load", async () => {
+		const blockedElements = ["iframe", "script", "hr"];
 
-	const allowedAttributes = [
-		"width",
-		"height",
-		"alt",
-		"target",
-		"href",
-		"src",
-		"srcset",
-	];
+		const allowedAttributes = [
+			"width",
+			"height",
+			"alt",
+			"target",
+			"href",
+			"src",
+			"srcset",
+		];
 
-	let i = 0;
-	document.querySelectorAll("temp").forEach((temp) => {
-		const html = temp.getAttribute("data-body");
-		const parser = new DOMParser();
-		const doc = parser
-			.parseFromString(html, "text/html")
-			.querySelector("*");
-		temp.remove();
+		let i = 0;
+		document.querySelectorAll("temp").forEach((temp) => {
+			const html = temp.getAttribute("data-body");
+			const parser = new DOMParser();
+			const doc = parser
+				.parseFromString(html, "text/html")
+				.querySelector("*");
+			temp.remove();
 
-		doc.querySelectorAll("*").forEach((el) => {
-			if (blockedElements.includes(el.tagName.toLowerCase())) {
-				el.remove();
-			}
-			Object.values(el.attributes).forEach(({ name }) => {
-				if (!allowedAttributes.includes(name)) el.removeAttribute(name);
+			doc.querySelectorAll("*").forEach((el) => {
+				if (blockedElements.includes(el.tagName.toLowerCase())) {
+					el.remove();
+				}
+				Object.values(el.attributes).forEach(({ name }) => {
+					if (!allowedAttributes.includes(name))
+						el.removeAttribute(name);
+				});
+
+				if (el instanceof HTMLAnchorElement) {
+					el.target = "_blank noreferer noopener";
+				}
+
+				if (el instanceof HTMLImageElement) {
+					el.loading = "lazy";
+					el.style.maxHeight = "30vh";
+					el.style.width = "auto";
+
+					if (el.src.includes("emoji")) {
+						el.style.width = "1em";
+						el.style.height = "1em";
+					}
+				}
 			});
 
-			if (el instanceof HTMLAnchorElement) {
-				el.target = "_blank noreferer noopener";
-			}
-
-			if (el instanceof HTMLImageElement) {
-				el.loading = "lazy";
-				el.style.maxHeight = "30vh";
-				el.style.width = "auto";
-
-				if (el.src.includes("emoji")) {
-					el.style.width = "1em";
-					el.style.height = "1em";
+			let gallery = [];
+			let delLists = [];
+			doc.querySelectorAll("li > img").forEach((el) => {
+				gallery.push(el);
+				if (!delLists.includes(el.parentElement.parentElement)) {
+					delLists.push(el.parentElement.parentElement);
 				}
+			});
+
+			if (gallery.length > 0) {
+				const dialog = document.createElement("dialog");
+				const h2 = document.createElement("h2");
+				h2.innerText = "Galerie přízpěvku";
+				const div = document.createElement("div");
+				div.style.maxHeight = "70vh";
+				dialog.style.minWidth = "30vw";
+				dialog.style.textAlign = "center";
+
+				const left = document.createElement("input");
+				const right = document.createElement("input");
+				left.value = "<";
+				left.type = "button";
+				right.value = ">";
+				right.type = "button";
+
+				const close = document.createElement("input");
+				close.type = "button";
+				close.value = "Zavřít";
+				close.onclick = () => dialog.close();
+
+				dialog.appendChild(h2);
+				dialog.appendChild(div);
+				dialog.appendChild(left);
+				dialog.appendChild(right);
+				dialog.appendChild(close);
+
+				doc.appendChild(dialog);
+
+				let x = 1;
+				gallery.forEach((el) => {
+					el.style.height = "auto";
+					el.title = "Obrázek " + x;
+					if (x != 1) el.hidden = true;
+					div.appendChild(el);
+					x++;
+				});
+
+				let index = 0;
+				let prev = gallery[0];
+				const update = () => {
+					prev.hidden = true;
+					prev = gallery[index];
+					prev.hidden = false;
+				};
+
+				right.onclick = () => {
+					index++;
+
+					if (index >= gallery.length) {
+						index = 0;
+					}
+
+					update();
+				};
+
+				left.onclick = () => {
+					index--;
+
+					if (index < 0) {
+						index = gallery.length - 1;
+					}
+
+					update();
+				};
+
+				delLists.forEach((el) => {
+					el.remove();
+				});
+
+				const open = document.createElement("input");
+				open.type = "button";
+				open.value = "Zobrazit galerii";
+				open.onclick = () => {
+					dialog.showModal();
+				};
+
+				doc.appendChild(open);
 			}
+			const content = document.querySelectorAll(".article-content")[i];
+			content.innerHTML = "";
+			content.appendChild(doc);
+			content.classList.remove("load");
+			i++;
 		});
-
-		let gallery = [];
-		let delLists = [];
-		doc.querySelectorAll("li > img").forEach((el) => {
-			gallery.push(el);
-			if (!delLists.includes(el.parentElement.parentElement)) {
-				delLists.push(el.parentElement.parentElement);
-			}
-		});
-
-		if (gallery.length > 0) {
-			const dialog = document.createElement("dialog");
-			const h2 = document.createElement("h2");
-			h2.innerText = "Galerie přízpěvku";
-			const div = document.createElement("div");
-			div.style.display = "flex";
-			div.style.flexDirection = "row";
-			div.style.maxWidth = "300px";
-			div.style.overflow = "hidden";
-
-			const left = document.createElement("input");
-			const right = document.createElement("input");
-			left.value = "<";
-			left.type = "button";
-			right.value = ">";
-			right.type = "button";
-
-			const close = document.createElement("input");
-			close.type = "button";
-			close.value = "Zavřít";
-			close.onclick = () => dialog.close();
-
-			dialog.appendChild(h2);
-			dialog.appendChild(div);
-			dialog.appendChild(left);
-			dialog.appendChild(right);
-			dialog.appendChild(close);
-
-			doc.appendChild(dialog);
-
-			let x = 1;
-			gallery.forEach(el => {
-				el.style.width = "300px";
-				el.style.height = "auto";
-				el.style.maxWidth = "300px";
-				el.style.maxHeight = "auto";
-				el.title = "Obrázek " + x;
-				div.appendChild(el);
-				x++;
-			});
-
-			right.onclick = () => {
-				let before = div.scrollLeft;
-				div.scrollLeft += 300;
-
-				if (div.scrollLeft - before < 300) {
-					div.scrollLeft = 0;
-				}
-			}
-
-			left.onclick = () => {
-				let before = div.scrollLeft;
-				div.scrollLeft -= 300;
-
-				if (before - div.scrollLeft < 300) {
-					div.scrollLeft = 30000; // 300 images totally real
-				}
-			}
-
-			delLists.forEach((el) => {
-				el.remove();
-			});
-			
-			const open = document.createElement("input");
-			open.type = "button";
-			open.value = "Zobrazit galerii";
-			open.onclick = () => {
-				dialog.showModal();
-			}
-
-			doc.appendChild(open);
-		}
-		const content = document.querySelectorAll(".article-content")[i];
-		content.innerHTML = "";
-		content.appendChild(doc);
-		content.classList.remove("load");
-		i++;
 	});
-});
 </script>

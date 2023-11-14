@@ -12,7 +12,7 @@ export interface Props {
 let { href, title, description, body, author, date, searchParams} = Astro.props;
 
 // translate href
-const translatedHref = "/articles/" + href.split("/")[3] + searchParams
+const translatedHref = "/articles/" + href.split("/")[3] + searchParams;
 
 const checkFor = [
 	"RNDr.",

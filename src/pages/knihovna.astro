@@ -1,4 +1,5 @@
 ---
+import Icon from "../components/Icon.astro";
 import Layout from "../layouts/Layout.astro";
 import { XMLParser } from "fast-xml-parser";
 
@@ -13,12 +14,16 @@ if (Astro.url.searchParams.has("q")) {
     const query = Astro.url.searchParams.get("q");
 
     const rss = await fetch(
-        "https://skola.tritius.cz/library/gymlit/search/rss?q=" + query
+        "https://skola.tritius.cz/library/gymlit/search/rss?q=" + query,
     ).then((data) => data.text());
     const parser = new XMLParser();
     const json = parser.parse(rss);
-
-    if (json.rss != undefined && json.rss.channel != undefined && json.rss.channel.item != undefined) {
+    
+    if (
+        json.rss != undefined &&
+        json.rss.channel != undefined &&
+        json.rss.channel.item != undefined
+    ) {
         json.rss.channel.item.forEach((item) => {
             results.push(item as SearchResult);
         });
@@ -28,15 +33,18 @@ if (Astro.url.searchParams.has("q")) {
 
 <Layout title="Katalog školní knihovny">
     <main class="container">
-        <input
-            type="search"
-            name="search"
-            id="search"
-            onkeydown="searchFor(event)"
-            value={Astro.url.searchParams.get("q")}
-            placeholder="Vyhledejte položku"
-            autofocus
-        />
+        <span class="search">
+            <Icon src="/search.svg" />
+            <input
+                type="search"
+                name="search"
+                id="search"
+                onkeydown="searchFor(event)"
+                value={Astro.url.searchParams.get("q")}
+                placeholder="Vyhledejte položku"
+                autofocus
+            />
+        </span>
         <table>
             {
                 results.length > 0 ? (
@@ -46,7 +54,7 @@ if (Astro.url.searchParams.has("q")) {
                             <th>Autor</th>
                         </tr>
                     </thead>
-                ) : null
+                ) : <p>Zde se zobrazí výsledky, pokud nějaké budou</p>
             }
             {
                 results.map((r) => (
@@ -73,3 +81,26 @@ if (Astro.url.searchParams.has("q")) {
         }
     }
 </script>
+
+<style>
+    input {
+        padding: 1em;
+        outline: none;
+        border: none;
+        background: none;
+    }
+
+    .search {
+        padding: 0.5em;
+        border: 1px solid black;
+        border-radius: 10px;
+        background: inherit;
+    }
+
+    input[type="search"]::-webkit-search-decoration,
+    input[type="search"]::-webkit-search-cancel-button,
+    input[type="search"]::-webkit-search-results-button,
+    input[type="search"]::-webkit-search-results-decoration {
+        -webkit-appearance: none;
+    }
+</style>

@@ -4,140 +4,89 @@ import Layout from "../layouts/Layout.astro";
 
 <Layout title="Informace o stránce">
     <main class="container">
-        <div id="obsah">
-            <h2>Obsah</h2>
-            <ul>
-                <li><a href="#motivace">Motivace</a></li>
-                <li><a href="#fungovani">Jak to vlastně funguje</a></li>
-                <li>
-                    <a href="#fungovani">Vychytávky</a>
-                    <ul>
-                        <li><a href="#jmenoucitele">Odhadnutí skutečného autora článku</a></li>
-                        <li><a href="#nervi">CAPS LOCK NENÍ MOC COOL</a></li>
-                        <li><a href="#zjednodus">Zjednodušení textu</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-        <div id="motivace">
-            <h2>Motivace</h2>
+        <div id="clanky">
+            <h2><a href="#clanky">Zobrazování článků</a></h2>
             <p>
-                Tato stránka byla vytvořena jako osobní projekt. Má za úkol
-                zrychlit a usnadnit používání webových stránek školy, a to
-                hlavně jejich infromační funkci. Kód je k nalezení na <a href="https://github.com/PanJohnny/FastGymlit">https://github.com/PanJohnny/FastGymlit</a>.
+                Pro zobrazování článků využívám dostupných RSS (Atom) kanálů. Ty
+                parsuju a pak vykresluju na stránku. Pro všechny zájemce můžete
+                využít API endpoint <code>/api/feed</code> s parametry <code
+                    >?page=cislo&category=novinky/uspechy-skoly</code
+                >, které jsou dobrovolné.
             </p>
-        </div>
-        <div id="fungovani">
-            <h2>Jak to vlastně funguje</h2>
-            <p>
-                Tahle stránka používá rss kanály školy k zobrazování dat. Na těchto stránlkách je dostupný endpoint <a href="/api/feed"><code>/api/feed</code></a>, který vrací hlavní stránku rss. Rss kanály školy jsou umístěny jako <code>/[kategorie]/feed</code> u hlavní stránky je to jen <code>/feed</code>.
-            </p>
-            <p><ins><code>/api/feed</code> občas nefunguje na vercelu a zároveň vám nedává možnost ?paged=stránka jako RSS kanál školy.</ins></p>
-            
-            <p>Odpověd z našeho api endpointu vypadá následovně:</p>
+            <div id="technickyblbosti">
+                <h3><a href="#technickyblbosti">Technické vymoženosti</a></h3>
+                <p>Tyto stránky mají následující vymoženosti:</p>
+                <div id="odhadnutiautora">
+                    <h4>
+                        <a href="#odhadnutiautora">Odhadnutí autora článku</a>
+                    </h4>
+                    <p>
+                        Pomocí jednoduchého algoritmu se pokouším odhadnout
+                        skutečného autora, to je vhodné, když je článek
+                        publikovaný pod účtem Administ apod . Toto odhadování funguje
+                        na principu polohy jména v článku a přítomnosti
+                        vysokoškolského titulu. Algoritmus oboduje svůj odhad
+                        1-3 a pak kdyžtak zobrazí "skutečného autora". Chyby
+                        jsou naprosto očekávány.
+                    </p>
+                </div>
+                <div id="capslockfuj">
+                    <h4>
+                        <a href="#capslockfuj">Nemám rád caps lock</a>
+                    </h4>
+                    <p>
+                        Pokud bude titulek napsaný CASP LOCKEM, tak se upraví
+                        tak, aby nebyl. To samozřejmě kompletně porušuje
+                        pravidla pravopisu.
+                    </p>
+                </div>
+            </div>
             <script
                 media="(prefered-color-scheme: dark)"
                 src="https://gist.github.com/PanJohnny/4a1b5fe83583602c953b204d8983e423.js"
-                is:inline
-            ></script>
-            <p>Stránka navíc používá server-side rendering s frameworkem <a href="https://astro.build">astro.js</a>. Což znamená, že veškerý obsah je už poslaný s první odpověí stránky. Navíc jsem drasticky snížil velikost stránky.</p>
-        </div>
-        <div id="vychytavky">
-            <h2>Vychytávky</h2>
-            <p>
-                Tato stránka umí spoustu věcí, které učitelé asi hold neumí,
-                nebo škola neudělá. Jako je například psaní skutečného autora do
-                políčka autorství a dále. Teď se podíváme na všechny vychytávky,
-                které jsem vytvořil.
-            </p>
-            <p>
-                Další z věcí je dostupnost jídelníčku a školní knihovny na jedné stránce.
-                Musím však dodat, že ne vše perfektně funguje a očekávajte příležitostní chyby.
-                Chyby nahlašujte zde: 
-                <a href="https://github.com/PanJohnny/FastGymlit/issues">https://github.com/PanJohnny/FastGymlit/issues</a>.
-            </p>
-            <div id="jmenoucitele">
-                <h3>1) Odhadnutí skutečného autora článku</h3>
+                is:inline></script>
+            <div id="jidlo">
+                <h2><a href="#jidlo">Jídelníček</a></h2>
                 <p>
-                    Jak jste si mohli všimnout, většina článků na www.gymlit.cz
-                    uvádí, že jsou od někoho z vedení, nebo od <code
-                        >Administ</code
-                    >rátora. Ale když si článek otevřete, tak je kompletně někdo
-                    jiný pod ním podepsaný.
+                    Strava, co jsem dokázal zjistit, neposkytuje API. Pro
+                    získávání jídelníčku tedy využívám webscraping. Jídelníčky
+                    bez potřeby přihlášení se nalézají na URL: <a
+                        href="https://www.strava.cz/strava5/Jidelnicky?zarizeni=0837&Tisk=true"
+                        >https://www.strava.cz/strava5/Jidelnicky?zarizeni=0837&Tisk=true</a
+                    >.
                 </p>
-                <img
-                    src="/info/authorship0.png"
-                    alt="Ukázka kontextu, na obrázku je jako autor u stránek uveden Administ, ale pod ním podepsaná paní profesorka Skolilová"
-                />
-                <div>
-                    <p>
-                        Z tohoto důvodu jsem přidal systém, který rozpozná podpis
-                        autora, podle toho jestli obsah článku obsahuje titul.
-                        Použít tituly se bohužel jevilo jako nejlehčí řešení.
-                    </p>
-                    <p>
-                        Při extrakci jména se určí, jak moc si je algoritmus jistý.
-                        Toto je číslo od 1-3, s tím že 3 znamená, že je naprosto
-                        jistý se vším. A skóre 1 potřeba na to, aby se vůbec ukázalo
-                        odhadované jméno
-                    </p>
-                    <p>
-                        Existují hodnotící kritéria - to jsou: jestli je toto jméno
-                        za polovinou (+1), nebo za třetinou (nejnižší laťka, jinak
-                        se nepokračuje dál a jméno se hold neodhaduje, nic
-                        nepřidává). Dále hodnotím, jestli je článek ve svém vlastním
-                        HTML elementu a v neposlední řadě, jestli je jméno delší než
-                        8 charakterů.
-                    </p>
-                    <p>
-                        Nakonec určím jestli má učitel uvedenou funkci a to ve tvaru <code
-                            >Ing. Ivan Ivan, profesionální ivan</code
-                        > to se potom extrahuje a společně s hodnotící jistotou je to
-                        uvedené při najetí myší na element (pokud není uvedeno, zobrazí
-                        se jen skóre/"ředitelství").
-                    </p>
-                    
-                    <p>
-                        Chápu že rozpoznávání na základě vysokoškolských titulů není nejlepší.
-                        Pokud Vás napadne lepší řešení napište mi.
-                    </p>
-                    <img
-                        src="/info/authorship1.png"
-                        alt="Ukázka ukazující, že u paní RNDr. Rozumové je uvedená profese a skóre"
-                    />
-                </div>
-            </div>
-            <div id="nervi">
-                <h3>2) CAPS LOCK NENÍ MOC COOL</h3>
-                <p>Rozhodně to není časté, ale stát se to občas může. 
-                    Pedagog zapne caps lock a místo <code>Název článku</code> napíše <code>NÁZEV ČLÁNKU</code>. 
-                    Proto je na místě kód, který zjistí jestli jsou nadpis jenom velká písmena a podle toho je zmenší.
-                    <inc>Bohužel nemám způsob jak efektivně promítnout pravidla pravopisu do nadpisů :( Očekávejte tedy chyby.</ins>
-                </p>
-                <img src="/info/noshout.png" alt="Ukázka této funkce">
-            </div>
-            <div id="zjednodus">
-                <h3>3) Zjednodušení textu</h3>
-                <p>Smaže formátování článku, zároveň změní velikost obrázků a upraví text.<ins>Vím, že smajlíci dělají problémy :(</ins></p>
-                <h4>Před:</h4>
-                <img src="/info/zjednodus0.png" alt="Text je zarovaný ošklivě na střed">
-                <h4>Po:</h4>
-                <img src="/info/zjednodus1.png" alt="Text je zarovaný doleva">
-                <ins>Tyto obrázky už nejsou relevantní, tlačítko se přesunulo a už není v beta testování.</ins>
-            </div>
-            <div id="dekuji">
-                <h2>Poděkování</h2>
                 <p>
-                    Děkuji Vám za využívání těchto stránek určitě to pro mě hodně znamená.
-                    Prosím obracejte se na mě se zpětnou vazbou :)
-                    <ins>Prozatím jsem nepřidal statistiky a tak nevidím reálnou navštěvovanost. Dejte mi vědět :*)</ins>
+                    Tip: úplně dole naleznete odhad ceny jídel. Je to jednoduše
+                    částka potřebná k zaplacení všech dostupných jídel.
+                    Vypočítám ji tedy <math display="inline"
+                        ><mi>počet jídel</mi><mo>·</mo><mn>50</mn></math
+                    >, kde 50 je cena obědu.
                 </p>
             </div>
-            <hr />
-            Vytvořil Jan Štefanča, se všemi problémy v rámci školy (pokud nějaké budou) se na mně obracejte prostřednictvím mého školního emailu. S připomenutími nebo pro pokec využijte instagram/twitter. Věřím, že formu kontaktu naleznete.
+
+            <div id="knihy">
+                <h2><a href="#knihy">Knihovna</a></h2>
+                <p>
+                    Procházení školní knihovny je možné díky RSS kanálu a to na
+                    adrese: <code
+                        >https://skola.tritius.cz/library/gymlit/search/rss?q=vyhledávání</code
+                    >.
+                </p>
+            </div>
         </div>
     </main>
 </Layout>
+
+<style>
+    :is(h2, h3, h4) > a {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    :is(h2, h3, h4) *::before {
+        content: "🔗";
+    }
+</style>
 
 <style is:inline>
     /* https://github.com/lonekorean/gist-syntax-themes */
@@ -153,16 +102,5 @@ import Layout from "../layouts/Layout.astro";
             color: gray;
             font-family: monospace;
         }
-    }
-
-    img {
-        border: 1px solid var(--font-color);
-        border-radius: 5px;
-        margin-top: .3em;
-        margin-bottom: .3em;
-    }
-
-    li > ul > li {
-        list-style: decimal;
     }
 </style>

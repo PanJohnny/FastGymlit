@@ -59,24 +59,15 @@ if (art.title.toUpperCase() == art.title) {
 
 <Layout title={noShout ? noShoutTitle : art.title} noShout={noShout}>
     <main class="container">
-        <input
-            type="button"
-            title="Zformátujte text, tak aby byl čitelnější"
-            onclick="textSimplify()"
-            role="button"
-            class="secondary"
-            id="simplify"
-            value="Vymazat formátování"
-        />
     </main>
     <h3>
         Kategorie: <a
             href={"/" +
-                art.category
+                (art.category.length?art.category[0]:art.category)
                     .toLowerCase()
                     .replace(/ /g, "-")
                     .normalize("NFD")
-                    .replace(/[\u0300-\u036f]/g, "")}>{art.category}</a
+                    .replace(/[\u0300-\u036f]/g, "")}>{art.category.length?art.category.join(", "):art.category}</a
         >
     </h3>
     <div id="article-body" set:html={art["content:encoded"]} />
@@ -98,8 +89,7 @@ if (art.title.toUpperCase() == art.title) {
         "float",
     ];
 
-    function textSimplify() {
-        const elements = document
+    const elements = document
             .querySelector("#article-body")
             .querySelectorAll("*");
         for (let index = 0; index < elements.length; index++) {
@@ -116,8 +106,6 @@ if (art.title.toUpperCase() == art.title) {
                 }
             });
 
-            console.log(element.nodeName);
-
             if (
                 (element.nodeName == "P" || element.nodeName == "SUP") &&
                 element.innerHTML.replace(/&nbsp;/g, "").trim().length == 0
@@ -125,7 +113,6 @@ if (art.title.toUpperCase() == art.title) {
                 element.remove();
             }
         }
-    }
 </script>
 
 <style>
