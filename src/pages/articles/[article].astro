@@ -67,7 +67,7 @@ if (art.title.toUpperCase() == art.title) {
                     .toLowerCase()
                     .replace(/ /g, "-")
                     .normalize("NFD")
-                    .replace(/[\u0300-\u036f]/g, "")}>{art.category.length?art.category.join(", "):art.category}</a
+                    .replace(/[\u0300-\u036f]/g, "")}>{art.category.join?art.category.join(", "):art.category}</a
         >
     </h3>
     <div id="article-body" set:html={art["content:encoded"]} />
@@ -118,9 +118,5 @@ if (art.title.toUpperCase() == art.title) {
 <style is:inline>
     img {
         margin: 1em;
-    }
-
-    a {
-        word-wrap: break-word;
     }
 </style>

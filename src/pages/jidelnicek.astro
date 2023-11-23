@@ -5,6 +5,7 @@ import Layout from "../layouts/Layout.astro";
 interface Food {
     rows: Row[];
     day: string;
+    international: boolean;
 }
 
 interface Row {
@@ -33,16 +34,20 @@ objednavky.forEach((o) => {
         });
     });
 
-    
     // Remove blank fields
     rows = rows.filter((row) => row.name.trim().length != 0);
 
     // Detect non inputed lunch
     if (rows.filter((row) => row.title == "Oběd č. 1").length == 0) {
         if (rows[0].name.trim().length == 0) return;
+        
         foods.push({
             day: den,
             rows: rows,
+            international:
+                rows[1].name.length -
+                    rows[1].name.replace(/[A-Z]/g, "").length >
+                3,
         });
     }
 });
@@ -54,6 +59,9 @@ objednavky.forEach((o) => {
             foods.map((food) => (
                 <article>
                     <h3>{food.day}</h3>
+                    {food.international ? (
+                        <p>Den mezinárodní kuchyně</p>
+                    ) : undefined}
                     <table>
                         <thead>
                             <tr>
@@ -65,11 +73,25 @@ objednavky.forEach((o) => {
                             <tr>
                                 <td>
                                     {row.title.charAt(0).toUpperCase() +
-                                        row.title.substring(1)}
+                                        row.title.substring(1).toLowerCase()}
                                 </td>
                                 <td>
                                     {row.name.charAt(0).toUpperCase() +
-                                        row.name.substring(1)}
+                                        row.name
+                                            .substring(1)
+                                            .toLowerCase()
+                                            .replaceAll(
+                                                /[,\.](?! )\w/g,
+                                                (elem) =>
+                                                    elem.charAt(0) +
+                                                    " " +
+                                                    elem.substring(1),
+                                            ).replaceAll(
+                                                / [,.]/g,
+                                                (elem) =>
+                                                    elem.trim().charAt(0) +
+                                                    elem.trim().substring(1),
+                                            )}
                                 </td>
                             </tr>
                         ))}
@@ -94,6 +116,8 @@ objednavky.forEach((o) => {
     table {
         border-collapse: collapse;
         width: 100%;
+        color: black;
+        background-color: white;
     }
 
     td,
@@ -102,8 +126,16 @@ objednavky.forEach((o) => {
         text-align: left;
         padding: 8px;
     }
+    
+    th {
+        background-color: #999;
+    }
 
     tr:nth-child(even) {
         background-color: #dddddd;
+    }
+
+    th:empty::after {
+        content: "#";
     }
 </style>

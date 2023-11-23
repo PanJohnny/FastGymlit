@@ -5,10 +5,10 @@ import Articles from "../components/Articles.astro";
 import Article from "../components/Article.astro";
 ---
 
-<Layout title="FastGymlit">
+<Layout title="Hlavní strana">
 	<main>
 		<div class="pin">
-			<Article author="Jan Štefanča" body="Tyto stránky momentálně prochází redesignem, můžete si vyzkoušet beta verzi." date="11. 7. 2023" description="Tyto stránky momentálně prochází redesignem, můžete si vyzkoušet beta verzi." href="" searchParams="../../../beta" title="Vyzkoušejte si beta verzi"></Article>
+			<Article author="Jan Štefanča" body="Předělal jsem design stránek, tak aby byl čistší a hezčí. Zároveň se teď dají novinky pročítat rychleji." date="11. 23. 2023" description="Předělal jsem design stránek, tak aby byl čistší a hezčí. Zároveň se teď dají novinky pročítat rychleji." href="" searchParams="/../../#" title="Design stránek předělán :)"></Article>
 		</div>
 		<Articles category={Category.Zadna} page={parseInt(Astro.url.searchParams.get("page"))} />
 	</main>

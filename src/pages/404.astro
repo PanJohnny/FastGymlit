@@ -1,0 +1,23 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="Hledaná adresa nebyla nalezena">
+    <main class="center">
+        <p>
+            Hledaná adresa <code>
+                {Astro.url.pathname}
+            </code>
+        </p>
+        <img src="https://http.cat/404" alt="Meme obrázek kočka 404" />
+    </main>
+</Layout>
+
+<style>
+    .center {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+</style>

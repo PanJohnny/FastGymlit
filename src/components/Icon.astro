@@ -31,4 +31,10 @@ const target = blank?"_blank noopener noreferer":undefined;
             background-image: var(--icon-src);
         }
     }
+
+    @media (prefers-color-scheme: dark) {
+        * {
+            filter: invert(1);
+        }
+    }
 </style>
