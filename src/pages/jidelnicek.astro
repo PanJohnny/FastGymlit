@@ -39,7 +39,7 @@ objednavky.forEach((o) => {
 
     // Detect non inputed lunch
     if (rows.filter((row) => row.title == "Oběd č. 1").length == 0) {
-        if (rows[0].name.trim().length == 0) return;
+        if (!rows || rows.length == 0 || rows[0].name.trim().length == 0) return;
         
         foods.push({
             day: den,

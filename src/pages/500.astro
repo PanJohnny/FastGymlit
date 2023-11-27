@@ -1,0 +1,40 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="Chyba serveru">
+    <main class="center">
+        <img src="https://http.cat/500.jpg" alt="kočka s titulkem 500 - Internal Server Error">
+        <p>
+            Během načítání došlo k nečekané chybě serveru. Chybu můžete nahlásit na <a href="https://github.com/PanJohnny/FastGymlit">GitHubu</a>, prosím zahrňte informace pro vývojáře.
+        </p>
+        <p>Informace pro vývojáře:
+            <ul>
+                <li>
+                    Generátor: {Astro.generator}
+                </li>
+                <li>
+                    Request: {Astro.request.method + " " + Astro.request.url}
+                </li>
+                <li>
+                    Referrer: {Astro.request.referrer}
+                </li>
+                <li>
+                    User-Agent: {Astro.request.headers.get("User-Agent")}
+                </li>
+                <li>
+                    Čas: {new Date().toLocaleString("CS-cz")}
+                </li>
+            </ul>
+        </p>
+    </main>
+</Layout>
+
+<style>
+    .center {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+</style>
