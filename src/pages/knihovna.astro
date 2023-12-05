@@ -103,4 +103,14 @@ if (Astro.url.searchParams.has("q")) {
     input[type="search"]::-webkit-search-results-decoration {
         -webkit-appearance: none;
     }
+
+    @media (prefers-color-scheme: dark) {
+        * {
+            color: white !important;   
+        }
+
+        .search {
+            border-color: white;
+        }
+    }
 </style>
