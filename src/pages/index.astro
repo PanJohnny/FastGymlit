@@ -7,9 +7,6 @@ import Article from "../components/Article.astro";
 
 <Layout title="Hlavní strana">
 	<main>
-		<div class="pin">
-			<Article author="Jan Štefanča" body="Předělal jsem design stránek, tak aby byl čistší a hezčí. Zároveň se teď dají novinky pročítat rychleji." date="11. 23. 2023" description="Předělal jsem design stránek, tak aby byl čistší a hezčí. Zároveň se teď dají novinky pročítat rychleji." href="" searchParams="/../../#" title="Design stránek předělán :)"></Article>
-		</div>
 		<Articles category={Category.Zadna} page={parseInt(Astro.url.searchParams.get("page"))} />
 	</main>
 </Layout>
